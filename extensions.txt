@@ -1,11 +1,14 @@
 bradlc.vscode-tailwindcss
 dskwrk.vscode-generate-getter-setter
 dsznajder.es7-react-js-snippets
+eamodio.gitlens
 esbenp.prettier-vscode
 github.copilot
 github.copilot-chat
 github.github-vscode-theme
+heybourn.headwind
 infeng.vscode-react-typescript
+johnpapa.vscode-peacock
 joy-yu.css-snippets
 liamhammett.inline-parameters
 ms-python.black-formatter
@@ -14,6 +17,7 @@ ms-python.python
 ms-python.vscode-pylance
 ms-python.vscode-python-envs
 ms-vscode.vscode-typescript-next
+naumovs.color-highlight
 rodrigovallades.es7-react-js-snippets
 wscats.html-snippets
 xabikos.javascriptsnippets
