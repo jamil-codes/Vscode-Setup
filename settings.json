@@ -36,14 +36,10 @@
   "editor.formatOnSave": true,
   "python.analysis.inlayHints.callArgumentNames": "all",
   "python.analysis.inlayHints.functionReturnTypes": true,
-  "javascript.inlayHints.functionLikeReturnTypes.enabled": true,
-  "javascript.inlayHints.parameterNames.enabled": "all",
   "typescript.inlayHints.enumMemberValues.enabled": true,
-  "typescript.inlayHints.parameterNames.enabled": "all",
   "github.copilot.nextEditSuggestions.enabled": false,
   "github.copilot.nextEditSuggestions.fixes": false,
   "github.copilot.renameSuggestions.triggerAutomatically": false,
-  "workbench.activityBar.location": "hidden",
   "github.copilot.editor.enableCodeActions": false,
   "github.copilot.enable": {
     "*": false
@@ -52,7 +48,7 @@
   "editor.mouseWheelZoom": true,
   "editor.tabCompletion": "on",
   "prettier.bracketSameLine": true,
-  "prettier.printWidth": 256,
+  "prettier.printWidth": 128,
   "headwind.runOnSave": false,
   "headwind.prependCustomClasses": true,
   "headwind.defaultSortOrder": [
@@ -1811,5 +1807,65 @@
     "clear-left"
   ],
   "gitlens.ai.model": "vscode",
-  "gitlens.ai.vscode.model": "copilot:gpt-4.1"
+  "gitlens.ai.vscode.model": "copilot:gpt-4.1",
+  "workbench.activityBar.location": "hidden",
+  "typescript.inlayHints.parameterTypes.enabled": true,
+  "peacock.favoriteColors": [
+    {
+      "name": "Angular Red",
+      "value": "#dd0531"
+    },
+    {
+      "name": "Azure Blue",
+      "value": "#007fff"
+    },
+    {
+      "name": "JavaScript Yellow",
+      "value": "#f9e64f"
+    },
+    {
+      "name": "Mandalorian Blue",
+      "value": "#1857a4"
+    },
+    {
+      "name": "Node Green",
+      "value": "#215732"
+    },
+    {
+      "name": "React Blue",
+      "value": "#61dafb"
+    },
+    {
+      "name": "Something Different",
+      "value": "#832561"
+    },
+    {
+      "name": "Svelte Orange",
+      "value": "#ff3d00"
+    },
+    {
+      "name": "Vue Green",
+      "value": "#42b883"
+    },
+    {
+      "name": "Django",
+      "value": "#064B35"
+    }
+  ],
+  "python.defaultInterpreterPath": "/bin/python3",
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "workbench.iconTheme": "material-icon-theme",
+  "git.confirmSync": false,
+  "search.smartCase": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "explorer.confirmDelete": false,
+  "liveServer.settings.donotShowInfoMsg": true,
+  "explorer.confirmDragAndDrop": false,
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  "git.enableSmartCommit": true
 }
