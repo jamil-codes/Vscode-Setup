@@ -1,8 +1,12 @@
 adpyke.codesnap
 almahdi.code-django
+apility.beautify-blade
 batisteo.vscode-django
 bibhasdn.django-snippets
+bmewburn.vscode-intelephense-client
 bradlc.vscode-tailwindcss
+catppuccin.catppuccin-vsc
+catppuccin.catppuccin-vsc-icons
 chakrounanas.turbo-console-log
 dskwrk.vscode-generate-getter-setter
 dsznajder.es7-react-js-snippets
@@ -17,7 +21,9 @@ heybourn.headwind
 infeng.vscode-react-typescript
 johnpapa.vscode-peacock
 joy-yu.css-snippets
+kenan-salar.calmppuccin-vscode
 liamhammett.inline-parameters
+mikaelkristiansson87.react-theme-vscode
 ms-python.black-formatter
 ms-python.debugpy
 ms-python.python
