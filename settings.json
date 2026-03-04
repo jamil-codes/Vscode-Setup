@@ -1,84 +1,110 @@
 {
+    // ==================== Version Info ====================
+    "settings.version": "2.0.0",
+    "settings.lastUpdated": "04-03-2026",
     // ==================== Core Editor & Behavior ====================
-    "editor.fontFamily": "Geist Mono, JetBrains Mono, Fira Code",
-    "editor.fontSize": 16,
-    "editor.fontWeight": "bold",
-    "editor.fontLigatures": "'ss01', 'ss02', 'ss03', 'ss04', 'ss05', 'ss06', 'ss07', 'ss08', 'calt', 'dlig'",
-    "editor.lineHeight": 32,
-    "editor.tabCompletion": "onlySnippets",
-    "editor.mouseWheelZoom": true,
+    "vscode.tsc.compiler.alertOnError": "never",
+    "vscode.tsc.compiler.alertTSConfigChanges": "never",
     "editor.copyWithSyntaxHighlighting": false,
     "editor.snippetSuggestions": "top",
     "editor.detectIndentation": false,
-    "editor.selectionHighlight": false,
-    "editor.occurrencesHighlight": "off",
-    "editor.matchBrackets": "never",
-    "editor.colorDecorators": false,
-    "editor.quickSuggestions": {
-        "comments": "on",
-        "strings": "inline"
-    },
-    "editor.inlineSuggest.suppressSuggestions": true,
     "editor.guides.indentation": false,
+    "editor.linkedEditing": true,
+    "editor.renderWhitespace": "selection",
+    "editor.smoothScrolling": true,
+    "workbench.list.smoothScrolling": true,
+    "editor.wordSeparators": "`~!@#%^&*()=+[{]}\\|;:'\",.<>/?",
+    "editor.wordWrap": "on",
+    "editor.wordWrapColumn": 120,
+    "editor.fontWeight": "400",
+    "editor.fontSize": 14,
+    "editor.lineHeight": 32,
+    "editor.fontFamily": "Geist Mono, JetBrains Mono, Fira Code",
+    "editor.fontLigatures": "'ss01', 'ss02', 'ss03', 'ss04', 'ss05', 'ss06', 'ss07', 'ss08', 'calt', 'dlig'",
+    "editor.cursorBlinking": "solid",
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.padding.top": 16,
+    "editor.mouseWheelZoom": true,
+    "editor.accessibilitySupport": "off",
+    "editor.stickyScroll.enabled": false,
     "editor.minimap.enabled": false,
     "editor.minimap.maxColumn": 250,
-    "editor.padding.top": 16,
+    "editor.occurrencesHighlight": "off",
+    "editor.colorDecorators": false,
     "editor.showUnused": false,
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.selectionHighlight": false,
+    "editor.matchBrackets": "never",
+    "editor.renderLineHighlight": "none",
+    "editor.renderControlCharacters": false,
+    "editor.hideCursorInOverviewRuler": true,
+    "editor.overviewRulerBorder": false,
+    "editor.lightbulb.enabled": "off",
+    "editor.hover.enabled": "on",
+    "editor.hover.delay": 500,
+    "editor.inlineSuggest.suppressSuggestions": true,
+    "editor.quickSuggestions": {
+        "strings": true
+    },
+    "editor.suggest.insertMode": "replace",
+    "editor.suggestFontSize": 16,
+    "editor.suggestLineHeight": 30,
+    "editor.tabCompletion": "onlySnippets",
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
     "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "never"
+    },
     "editor.bracketPairColorization.enabled": true,
-    "editor.wordSeparators": "`~!@#%^&*()=+[{]}\\|;:'\",.<>/?",
-    "editor.wordWrap": "wordWrapColumn",
-    "editor.wordWrapColumn": 120,
-    "editor.linkedEditing": true,
-    "editor.cursorBlinking": "phase",
-    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.gotoLocation.multipleReferences": "goto",
     "editor.gotoLocation.multipleDefinitions": "goto",
     "editor.gotoLocation.multipleDeclarations": "goto",
-    "editor.gotoLocation.multipleReferences": "goto",
     "editor.gotoLocation.multipleImplementations": "goto",
     "editor.gotoLocation.multipleTypeDefinitions": "goto",
-
-    // ==================== User Interface & Experience ====================
-    "workbench.activityBar.location": "hidden",
-    "workbench.sideBar.location": "right",
-    "workbench.statusBar.visible": false,
-    "workbench.startupEditor": "none",
-    "workbench.editor.enablePreview": false,
-    "workbench.editor.empty.hint": "hidden",
-    "workbench.tree.indent": 15,
-    "workbench.tree.enableStickyScroll": false,
-    "workbench.colorTheme": "GitHub Dark Default",
-    "workbench.iconTheme": "material-icon-theme",
-    "material-icon-theme.files.color": "#42a5f5",
-    "material-icon-theme.saturation": 0,
-    "workbench.tips.enabled": false,
-    "breadcrumbs.enabled": false,
-    "scm.diffDecorations": "none",
-    "problems.decorations.enabled": false,
-    "explorer.sortOrder": "type",
-    "explorer.confirmDragAndDrop": false,
-    "explorer.confirmDelete": false,
-    "explorer.compactFolders": false,
+    "editor.find.addExtraSpaceOnTop": false,
+    "editor.scrollBeyondLastLine": false,
+    // ==================== Diff / Merge Editor ====================
     "diffEditor.ignoreTrimWhitespace": false,
     "diffEditor.renderSideBySide": false,
     "diffEditor.wordWrap": "on",
+    // ==================== Notebook ====================
     "notebook.output.wordWrap": true,
-
-    // ==================== File & Workspace ====================
-    "files.autoSave": "afterDelay",
-    "files.autoSaveDelay": 100,
+    "notebook.defaultFormatter": "esbenp.prettier-vscode",
+    // ==================== Files & Workspace ====================
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 100,
     "files.associations": {
         ".php_cs": "php",
-        ".php_cs.dist": "php"
+        ".php_cs.dist": "php",
+        "*.css": "css"
     },
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true
+    },
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/node_modules/**": true,
+        "**/vendor/**": true,
+        "**/storage/**": true
+    },
+    "security.workspace.trust.untrustedFiles": "open",
+    // ==================== Search ====================
     "search.useIgnoreFiles": false,
     "search.smartCase": true,
     "search.exclude": {
+        // Hide everything in /vendor, except the "laravel" and "livewire" folder.
         "**/vendor/{[^l],?[^ai]}*": true,
+        // Hide everything in /public, except "index.php"
         "**/public/{[^i],?[^n]}*": true,
         "**/node_modules": true,
         "**/dist": true,
@@ -88,76 +114,215 @@
         "storage": true,
         ".phpunit.result.cache": true
     },
-
-    // ==================== Languages & Extensions ====================
-    "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter"
+    // ==================== Workbench UI ====================
+    "workbench.activityBar.location": "hidden",
+    "workbench.statusBar.visible": false,
+    "workbench.sideBar.location": "right",
+    "workbench.secondarySideBar.defaultVisibility": "hidden",
+    "workbench.tips.enabled": false,
+    "workbench.startupEditor": "none",
+    "workbench.tree.enableStickyScroll": false,
+    "workbench.tree.indent": 15,
+    "workbench.navigationControl.enabled": false,
+    "workbench.editor.enablePreview": false,
+    "workbench.editor.enablePreviewFromQuickOpen": false,
+    "workbench.editor.empty.hint": "hidden",
+    "workbench.editorAssociations": {
+        "*.svg": "default"
     },
-    "[typescript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[javascript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.formatOnSave": true
-    },
-    "[javascriptreact]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.formatOnSave": true
-    },
-    "[typescriptreact]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.formatOnSave": true
-    },
-    "[tailwindcss]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.formatOnSave": true
-    },
-    "[vue]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.formatOnSave": true
-    },
-    "[html]": {
-        "editor.defaultFormatter": "apility.beautify-blade",
-        "editor.formatOnSave": true
-    },
-    "[css]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.formatOnSave": true
+    "workbench.colorTheme": "GitHub Dark Default",
+    "workbench.preferredHighContrastLightColorTheme": "Next Dark Pro",
+    "workbench.preferredLightColorTheme": "React Dev Theme (dark)",
+    "workbench.iconTheme": "material-icon-theme",
+    "window.newWindowDimensions": "inherit",
+    "window.commandCenter": false,
+    "window.menuBarVisibility": "compact",
+    "window.systemColorTheme": "dark",
+    "breadcrumbs.enabled": false,
+    // ==================== Explorer ====================
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+    "explorer.sortOrder": "type",
+    "explorer.compactFolders": false,
+    // ==================== Terminal ====================
+    "terminal.integrated.lineHeight": 1.5,
+    "terminal.integrated.fontSize": 16,
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "terminal.integrated.enableMultiLinePasteWarning": "never",
+    // ==================== Git & Version Control ====================
+    "git.decorations.enabled": false,
+    "git.enableSmartCommit": true,
+    "git.autofetch": true,
+    "git.openRepositoryInParentFolders": "always",
+    "git.confirmSync": false,
+    "git.autorefresh": true,
+    "gitlens.ai.model": "vscode",
+    "gitlens.ai.vscode.model": "copilot:gpt-4.1",
+    "scm.diffDecorations": "none",
+    // ==================== Auto Close / Rename Tag ====================
+    "auto-close-tag.activationOnLanguage": [
+        "xml",
+        "php",
+        "blade",
+        "html",
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact"
+    ],
+    "auto-close-tag.enableAutoCloseTag": true,
+    "auto-close-tag.includeAutoCloseTags": true,
+    "auto-rename-tag.activationOnLanguage": [
+        "xml",
+        "php",
+        "blade",
+        "html",
+        "javascriptreact",
+        "typescriptreact"
+    ],
+    "auto-rename-tag.includeAutoRenameTags": true,
+    // ==================== Problems & Decorations ====================
+    "problems.decorations.enabled": false,
+    // ==================== Error Lens ====================
+    "errorLens.enabled": true,
+    "errorLens.fontStyleItalic": true,
+    "errorLens.fontWeight": "400",
+    "errorLens.errorColor": "rgba(255,80,80,0.3)",
+    "errorLens.warningColor": "rgba(255,200,100,0.3)",
+    "errorLens.infoColor": "rgba(100,150,255,0.3)",
+    "errorLens.hintColor": "rgba(150,150,150,0.3)",
+    "errorLens.gutterIconsEnabled": true,
+    "errorLens.statusBarMessageEnabled": true,
+    "errorLens.messageBackground": false,
+    // ==================== Language Specific ====================
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
     },
     "[json]": {
         "editor.defaultFormatter": "vscode.json-language-features"
     },
-    "[jsonc]": {
+    "[typescript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "[javascriptreact]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "vscode.html-language-features"
+    },
+    "[css]": {
+        "editor.defaultFormatter": "vscode.css-language-features"
+    },
+    "[markdown]": {
+        "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+    },
+    "[django-html]": {
+        "editor.defaultFormatter": "junstyle.vscode-django-support",
+        "editor.quickSuggestions": {
+            "comments": true,
+            "other": true,
+            "strings": true
+        },
+        "editor.tabSize": 4,
+        "editor.wordWrap": "on"
     },
     "[php]": {
         "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
     },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "[blade]": {
+        "editor.defaultFormatter": "apility.beautify-blade"
+    },
+    // ==================== Python ====================
     "python.defaultInterpreterPath": "/bin/python3",
     "python.analysis.inlayHints.callArgumentNames": "all",
     "python.analysis.inlayHints.functionReturnTypes": true,
+    "python.formatting.provider": "black",
+    "black-formatter.args": [
+        "--line-length",
+        "88"
+    ],
+    "black-formatter.importStrategy": "fromEnvironment",
+    "black-formatter.path": [
+        "black"
+    ],
+    // ==================== TypeScript / JavaScript ====================
     "typescript.inlayHints.enumMemberValues.enabled": true,
     "typescript.inlayHints.parameterTypes.enabled": true,
     "typescript.updateImportsOnFileMove.enabled": "always",
     "javascript.updateImportsOnFileMove.enabled": "always",
     "php.suggest.basic": false,
-    "emmet.preferences": {},
-    "emmet.triggerExpansionOnTab": true,
+    // ==================== Inline Parameters ====================
+    "inlineParameters.enabled": true,
+    "inlineParameters.showDuringDebug": true,
+    "inlineParameters.maxHeight": 100,
+    // ==================== Generate Getter/Setter ====================
+    "generateGetterSetter.generateComments": true,
+    "generateGetterSetter.useArrowFunctions": false,
+    "generateGetterSetter.usePrefix": true,
+    // ==================== Emmet ====================
     "emmet.includeLanguages": {
+        "django-html": "html",
+        "jinja-html": "html",
         "blade": "html",
         "vue-html": "html",
         "vue": "html",
         "react": "html",
         "javascript": "html"
     },
+    "emmet.preferences": {},
+    "emmet.triggerExpansionOnTab": true,
+    // ==================== Prettier ====================
+    "prettier.printWidth": 420,
     "prettier.bracketSameLine": true,
-    "prettier.printWidth": 188,
+    "prettier.experimentalTernaries": true,
+    "prettier.singleAttributePerLine": true,
+    "prettier.useTabs": true,
+    "prettier.htmlWhitespaceSensitivity": "strict",
     "prettier.tabWidth": 4,
     "prettier.useEditorConfig": false,
-    "tailwindCSS.includeLanguages": {
-        "plaintext": "html"
-    },
+    // ==================== HTML / CSS / Tailwind ====================
+    "html.format.wrapAttributes": "preserve-aligned",
+    "css.lint.unknownAtRules": "ignore",
+    "less.lint.unknownAtRules": "ignore",
+    "scss.lint.unknownAtRules": "ignore",
     "tailwindCSS.experimental.configFile": null,
+    "tailwindCSS.includeLanguages": {
+        "html": "html",
+        "javascript": "javascript",
+        "css": "css"
+    },
+    "tailwindCSS.emmetCompletions": true,
+    // ==================== Color Highlight ====================
+    "color-highlight.markerType": "background",
+    "color-highlight.languages": [
+        "css",
+        "scss",
+        "less",
+        "stylus",
+        "javascript",
+        "typescript",
+        "javascriptreact",
+        "typescriptreact",
+        "html",
+        "vue",
+        "blade"
+    ],
+    "color-highlight.matchWords": false,
+    // ==================== Beautify Blade ====================
+    "beautify-blade.sortHtmlAttributes": "none",
+    "beautify-blade.wrapAttributes": "auto",
+    "beautify-blade.wrapLineLength": 120,
+    // ==================== Headwind (Tailwind CSS class sorter) ====================
+    "headwind.removeDuplicates": false,
     "headwind.runOnSave": false,
     "headwind.prependCustomClasses": true,
     "headwind.defaultSortOrder": [
@@ -1915,30 +2080,55 @@
         "stroke-2",
         "clear-left"
     ],
-
-    // ==================== Git & Version Control ====================
-    "git.confirmSync": false,
-    "git.enableSmartCommit": true,
-    "git.autofetch": true,
-    "git.autorefresh": true,
-    "gitlens.ai.model": "vscode",
-    "gitlens.ai.vscode.model": "copilot:gpt-4.1",
-
-    // ==================== Terminal ====================
-    "terminal.integrated.enableMultiLinePasteWarning": "never",
-    "terminal.integrated.lineHeight": 1.5,
-    "terminal.integrated.fontSize": 16,
-
+    // ==================== CodeSnap ====================
+    "codesnap.containerPadding": "0em",
+    "codesnap.boxShadow": "rgba(0, 0, 0, 0.55) 0px 12px 24px",
+    "codesnap.backgroundColor": "#FFFF",
+    "codesnap.showLineNumbers": false,
+    "codesnap.roundedCorners": false,
+    "codesnap.transparentBackground": true,
+    // ==================== Live Server ====================
+    "liveServer.settings.donotShowInfoMsg": true,
     // ==================== Code Runner ====================
+    "code-runner.runInTerminal": true,
     "code-runner.clearPreviousOutput": true,
     "code-runner.saveFileBeforeRun": true,
-
-    // ==================== Chat & AI Features (Cleaned & Updated) ====================
-    // Note: Many chat.agent.* settings from your original file have been deprecated or renamed in recent VS Code versions.
-    // The settings below reflect currently relevant configurations.
-    "inlineChat.holdToSpeech": false,
-    "inlineChat.lineNaturalLanguageHint": false,
-    "chat.tools.terminal.enableAutoApprove": false,
+    // ==================== Turbo Console Log ====================
+    "turboConsoleLog.addSemicolonInTheEnd": true,
+    "turboConsoleLog.insertEnclosingFunction": false,
+    "turboConsoleLog.includeFileNameAndLineNum": false,
+    "turboConsoleLog.logMessagePrefix": "🚀",
+    "turboConsoleLog.logMessageSuffix": "",
+    "turboConsoleLog.wrapLogMessage": false,
+    // ==================== Markdown ====================
+    "markdown.extension.print.theme": "dark",
+    // ==================== SonarLint ====================
+    "sonarlint.rules": {
+        "python:S1172": {
+            "level": "off"
+        },
+        "css:S4654": {
+            "level": "on"
+        },
+        "python:S1192": {
+            "level": "off"
+        }
+    },
+    // ==================== Total TypeScript ====================
+    "totalTypeScript.hideAllTips": true,
+    "totalTypeScript.hideBasicTips": true,
+    // ==================== React Snippets ====================
+    "reactSnippets.settings.prettierEnabled": true,
+    "reactSnippets.typescript": true,
+    "reactSnippets.includeContext": true,
+    // ==================== vscode-prettier-eslint ====================
+    "vs-code-prettier-eslint.prettierLast": true,
+    // ==================== Rainbow Brackets ====================
+    "RainbowBrackets.depreciation-notice": false,
+    // ==================== Material Icon Theme ====================
+    "material-icon-theme.files.color": "#42a5f5",
+    "material-icon-theme.saturation": 0,
+    // ==================== GitHub Copilot / Chat / AI ====================
     "github.copilot.enable": {
         "*": false
     },
@@ -1946,18 +2136,17 @@
     "github.copilot.nextEditSuggestions.enabled": false,
     "github.copilot.nextEditSuggestions.fixes": false,
     "github.copilot.renameSuggestions.triggerAutomatically": false,
-    "editor.accessibilitySupport": "off",
-    "liveServer.settings.donotShowInfoMsg": true,
-    "security.workspace.trust.untrustedFiles": "open",
-    "animations.Enabled": true,
-    "animations.Install-Method": "Custom UI Style",
-    "vscode-pets.theme": "forest",
-    "vscode-pets.throwBallWithMouse": true,
-    "codesnap.backgroundColor": "#FFC540",
-    "codesnap.containerPadding": "8em",
-    "codesnap.boxShadow": "rgba(0, 0, 0, 0.55) 0px 12px 24px",
-    "codesnap.roundedCorners": true,
-    "codesnap.showLineNumbers": false,
+    "github.copilot.chat.codeGeneration.useInstructionFiles": false,
+    "github.copilot.chat.useResponsesApi": false,
+    "chat.editor.wordWrap": "on",
+    "chat.commandCenter.enabled": false,
+    "chat.tools.terminal.enableAutoApprove": false,
+    "chat.agent.codeBlockProgress": false,
+    "chat.agent.enabled": false,
+    "chat.disableAIFeatures": true,
+    "inlineChat.holdToSpeech": false,
+    "inlineChat.lineNaturalLanguageHint": false,
+    // ==================== Peacock ====================
     "peacock.favoriteColors": [
         {
             "name": "Angular Red",
@@ -2000,11 +2189,37 @@
             "value": "#064B35"
         }
     ],
-    "github.copilot.chat.codeGeneration.useInstructionFiles": false,
-    "github.copilot.chat.useResponsesApi": false,
-    "editor.suggest.insertMode": "replace",
-    "workbench.secondarySideBar.defaultVisibility": "hidden",
-    "chat.agent.codeBlockProgress": false,
-    "chat.agent.enabled": false,
-    "chat.disableAIFeatures": true
+    // ==================== VS Code Pets ====================
+    "vscode-pets.theme": "forest",
+    "vscode-pets.throwBallWithMouse": true,
+    // ==================== Animations ====================
+    "animations.Enabled": true,
+    "animations.Install-Method": "Custom UI Style",
+    // ==================== Custom CSS/JS (Ubuntu paths) ====================
+    "vscode_custom_css.imports": [
+        "file:///${userHome}/.config/Code/User/custom-vscode.css",
+        "file:///${userHome}/.config/Code/User/vscode-script.js"
+    ],
+    // ==================== Token Color Customizations ====================
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": [
+                    "comment",
+                    "keyword",
+                    "variable.language",
+                    "entity.other.attribute-name.html",
+                    "entity.other.attribute-name",
+                    "keyword.control",
+                    "storage.type",
+                    "comment",
+                    "comment.block",
+                    "comment.line"
+                ],
+                "settings": {
+                    "fontStyle": ""
+                }
+            }
+        ]
+    }
 }
