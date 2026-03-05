@@ -143,6 +143,7 @@ Replace with:
 Exec=sudo code --no-sandbox --user-data-dir=/root/.vscode-root %F
 ```
 Then save with <kbd>Ctrl+O</kbd> <kbd>Enter</kbd> and then exit with <kbd>Ctrl+X</kbd>
+
 ---
 
 ## 📝 Notes
