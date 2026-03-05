@@ -284,7 +284,7 @@
     "prettier.printWidth": 420,
     "prettier.bracketSameLine": true,
     "prettier.experimentalTernaries": true,
-    "prettier.singleAttributePerLine": true,
+    "prettier.singleAttributePerLine": false,
     "prettier.useTabs": true,
     "prettier.htmlWhitespaceSensitivity": "strict",
     "prettier.tabWidth": 4,
@@ -2221,5 +2221,8 @@
                 }
             }
         ]
-    }
+    },
+    "custom-ui-style.external.imports": [
+        "file:///home/ashfleet/.vscode/extensions/brandonkirbyson.vscode-animations-2.0.7/dist/updateHandler.js"
+    ]
 }
