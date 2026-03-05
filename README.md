@@ -128,8 +128,21 @@ Copy-Item custom-vscode-script.js "$env:USERPROFILE\"
 ### Permission Issues on Linux?
 ```bash
 sudo chown -R $(whoami) ~/.config/Code
+sudo chmod -R 777 /usr/share/code
 ```
-
+if it does not work try this:
+```
+sudo nano /usr/share/applications/code.desktop
+```
+Find the line:
+```
+Exec=/usr/share/code/code %F
+```
+Replace with:
+```
+Exec=sudo code --no-sandbox --user-data-dir=/root/.vscode-root %F
+```
+Then save with <kbd>Ctrl+O</kbd> <kbd>Enter</kbd> and then exit with <kbd>Ctrl+X</kbd>
 ---
 
 ## 📝 Notes
