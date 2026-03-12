@@ -126,9 +126,10 @@ Copy-Item custom-vscode-script.js "$env:USERPROFILE\"
 - Make sure VS Code is installed and `code` command works
 
 ### Permission Issues on Linux?
+Check vs code location by typing `which code` in the terminal
 ```bash
-sudo chown -R $(whoami) ~/.config/Code
-sudo chmod -R 777 /usr/share/code
+sudo chown -R $(whoami) <location>
+sudo chmod -R 777 <location>
 ```
 if it does not work try this:
 ```
@@ -136,7 +137,7 @@ sudo nano /usr/share/applications/code.desktop
 ```
 Find the line:
 ```
-Exec=/usr/share/code/code %F
+Exec=<VScode Location>/code %F
 ```
 Replace with:
 ```
