@@ -1,4 +1,4 @@
-# 💻 My Personal Visual Studio Code Configuration
+# My Personal Visual Studio Code Configuration
 **Optimized for focus, performance, and a clean workflow**
 
 This repository includes:
@@ -10,7 +10,7 @@ This repository includes:
 
 ---
 
-## 📋 Prerequisites
+## Prerequisites
 
 1. **Install VS Code** (Latest version)
    - [Download from official website](https://code.visualstudio.com/download)
@@ -109,7 +109,7 @@ Copy-Item custom-vscode-script.js "$env:USERPROFILE\"
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Custom CSS Not Working?
 - **Verify file paths exist**:
@@ -147,7 +147,7 @@ Then save with <kbd>Ctrl+O</kbd> <kbd>Enter</kbd> and then exit with <kbd>Ctrl+X
 
 ---
 
-## 📝 Notes
+## Notes
 
 - **VS Code Updates**: After each VS Code update, you may need to reload custom CSS
 - **Extension Updates**: Run `code --update-extensions` periodically
