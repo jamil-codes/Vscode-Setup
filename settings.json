@@ -1,11 +1,16 @@
 {
     // ==================== Version Info ====================
-    "settings.version": "2.0.0",
-    "settings.lastUpdated": "04-03-2026",
+    "settings.version": "3.0.0",
+    "settings.lastUpdated": "28-03-2026",
     // ==================== Core Editor & Behavior ====================
-    "vscode.tsc.compiler.alertOnError": "never",
-    "vscode.tsc.compiler.alertTSConfigChanges": "never",
-    "editor.copyWithSyntaxHighlighting": false,
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnSaveMode": "file",
+    "notebook.formatOnSave.enabled": true,
+    "editor.padding.bottom": 350,
+    "editor.allowVariableFontsInAccessibilityMode": true,
+    "editor.autoIndentOnPaste": true,
+    "editor.padding.top": 16,
     "editor.snippetSuggestions": "top",
     "editor.detectIndentation": false,
     "editor.guides.indentation": false,
@@ -23,15 +28,12 @@
     "editor.fontLigatures": "'ss01', 'ss02', 'ss03', 'ss04', 'ss05', 'ss06', 'ss07', 'ss08', 'calt', 'dlig'",
     "editor.cursorBlinking": "solid",
     "editor.cursorSmoothCaretAnimation": "on",
-    "editor.padding.top": 16,
     "editor.mouseWheelZoom": true,
     "editor.accessibilitySupport": "off",
     "editor.stickyScroll.enabled": false,
     "editor.minimap.enabled": false,
     "editor.minimap.maxColumn": 250,
     "editor.occurrencesHighlight": "off",
-    "editor.colorDecorators": false,
-    "editor.showUnused": false,
     "editor.selectionHighlight": false,
     "editor.matchBrackets": "never",
     "editor.renderLineHighlight": "none",
@@ -49,14 +51,10 @@
     "editor.suggestFontSize": 16,
     "editor.suggestLineHeight": 30,
     "editor.tabCompletion": "onlySnippets",
-    "editor.formatOnPaste": true,
-    "editor.formatOnType": true,
-    "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.codeActionsOnSave": {
         "source.organizeImports": "never"
     },
-    "editor.bracketPairColorization.enabled": true,
     "editor.gotoLocation.multipleReferences": "goto",
     "editor.gotoLocation.multipleDefinitions": "goto",
     "editor.gotoLocation.multipleDeclarations": "goto",
@@ -130,9 +128,8 @@
     "workbench.editorAssociations": {
         "*.svg": "default"
     },
-    "workbench.colorTheme": "GitHub Dark Default",
-    "workbench.preferredHighContrastLightColorTheme": "Next Dark Pro",
-    "workbench.preferredLightColorTheme": "React Dev Theme (dark)",
+    "workbench.colorTheme": "React Theme",
+    "workbench.preferredLightColorTheme": "React Theme",
     "workbench.iconTheme": "material-icon-theme",
     "window.newWindowDimensions": "inherit",
     "window.commandCenter": false,
@@ -156,8 +153,6 @@
     "git.openRepositoryInParentFolders": "always",
     "git.confirmSync": false,
     "git.autorefresh": true,
-    "gitlens.ai.model": "vscode",
-    "gitlens.ai.vscode.model": "copilot:gpt-4.1",
     "scm.diffDecorations": "none",
     // ==================== Auto Close / Rename Tag ====================
     "auto-close-tag.activationOnLanguage": [
@@ -171,7 +166,6 @@
         "typescriptreact"
     ],
     "auto-close-tag.enableAutoCloseTag": true,
-    "auto-close-tag.includeAutoCloseTags": true,
     "auto-rename-tag.activationOnLanguage": [
         "xml",
         "php",
@@ -232,14 +226,8 @@
         "editor.tabSize": 4,
         "editor.wordWrap": "on"
     },
-    "[php]": {
-        "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
-    },
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter"
-    },
-    "[blade]": {
-        "editor.defaultFormatter": "apility.beautify-blade"
     },
     // ==================== Python ====================
     "python.defaultInterpreterPath": "/bin/python3",
@@ -248,7 +236,7 @@
     "python.formatting.provider": "black",
     "black-formatter.args": [
         "--line-length",
-        "88"
+        "1000"
     ],
     "black-formatter.importStrategy": "fromEnvironment",
     "black-formatter.path": [
@@ -259,14 +247,6 @@
     "js/ts.inlayHints.parameterTypes.enabled": true,
     "js/ts.updateImportsOnFileMove.enabled": "always",
     "php.suggest.basic": false,
-    // ==================== Inline Parameters ====================
-    "inlineParameters.enabled": true,
-    "inlineParameters.showDuringDebug": true,
-    "inlineParameters.maxHeight": 100,
-    // ==================== Generate Getter/Setter ====================
-    "generateGetterSetter.generateComments": true,
-    "generateGetterSetter.useArrowFunctions": false,
-    "generateGetterSetter.usePrefix": true,
     // ==================== Emmet ====================
     "emmet.includeLanguages": {
         "django-html": "html",
@@ -280,7 +260,7 @@
     "emmet.preferences": {},
     "emmet.triggerExpansionOnTab": true,
     // ==================== Prettier ====================
-    "prettier.printWidth": 420,
+    "prettier.printWidth": 556,
     "prettier.bracketSameLine": true,
     "prettier.experimentalTernaries": true,
     "prettier.singleAttributePerLine": false,
@@ -316,10 +296,6 @@
         "blade"
     ],
     "color-highlight.matchWords": false,
-    // ==================== Beautify Blade ====================
-    "beautify-blade.sortHtmlAttributes": "none",
-    "beautify-blade.wrapAttributes": "auto",
-    "beautify-blade.wrapLineLength": 120,
     // ==================== Headwind (Tailwind CSS class sorter) ====================
     "headwind.removeDuplicates": false,
     "headwind.runOnSave": false,
@@ -2118,8 +2094,6 @@
     "totalTypeScript.hideBasicTips": true,
     // ==================== React Snippets ====================
     "reactSnippets.settings.prettierEnabled": true,
-    "reactSnippets.typescript": true,
-    "reactSnippets.includeContext": true,
     // ==================== vscode-prettier-eslint ====================
     "vs-code-prettier-eslint.prettierLast": true,
     // ==================== Rainbow Brackets ====================
@@ -2188,12 +2162,6 @@
             "value": "#064B35"
         }
     ],
-    // ==================== VS Code Pets ====================
-    "vscode-pets.theme": "forest",
-    "vscode-pets.throwBallWithMouse": true,
-    // ==================== Animations ====================
-    "animations.Enabled": true,
-    "animations.Install-Method": "Custom UI Style",
     // ==================== Custom CSS/JS (Ubuntu paths) ====================
     "vscode_custom_css.imports": [
         "file:///${userHome}/.config/Code/User/custom-vscode.css",
@@ -2221,7 +2189,26 @@
             }
         ]
     },
-    "custom-ui-style.external.imports": [
-        "file:///home/ashfleet/.vscode/extensions/brandonkirbyson.vscode-animations-2.0.7/dist/updateHandler.js"
-    ]
+    "terminal.integrated.defaultProfile.linux": "zsh",
+    "workbench.editor.tabSizingFixedMaxWidth": 555,
+    "prettier.semi": false,
+    "js/ts.preferences.quoteStyle": "double",
+    "prettier.quoteProps": "consistent",
+    "prettier.singleQuote": false,
+    "screencastMode.fontSize": 30,
+    "screencastMode.verticalOffset": 0,
+    "screencastMode.keyboardOverlayTimeout": 2500,
+    "chat.tips.enabled": false,
+    "search.searchEditor.defaultNumberOfContextLines": 10,
+    "search.searchEditor.reusePriorSearchConfiguration": true,
+    "json.schemaDownload.trustedDomains": {
+        "https://schemastore.azurewebsites.net/": true,
+        "https://raw.githubusercontent.com/microsoft/vscode/": true,
+        "https://raw.githubusercontent.com/devcontainers/spec/": true,
+        "https://www.schemastore.org/": true,
+        "https://json.schemastore.org/": true,
+        "https://json-schema.org/": true,
+        "https://developer.microsoft.com/json-schemas/": true,
+        "https://biomejs.dev": true
+    }
 }
