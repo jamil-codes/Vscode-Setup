@@ -128,8 +128,8 @@ Copy-Item custom-vscode-script.js "$env:USERPROFILE\"
 ### Permission Issues on Linux?
 Check vs code location by typing `which code` in the terminal
 ```bash
-sudo chown -R $(whoami) <location>
-sudo chmod -R 777 <location>
+sudo chown -R $(whoami) "$(which code)"
+sudo chmod -R 777 "$(which code)"
 ```
 if it does not work try this:
 ```
