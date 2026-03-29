@@ -120,30 +120,11 @@ Copy-Item custom-vscode-script.js "$env:USERPROFILE\"
   # Windows (PowerShell)
   Test-Path "$env:USERPROFILE\custom-vscode.css"
   ```
-- **Check for errors**: Open VS Code, press `Ctrl+Shift+I` to open Developer Tools, look for red errors
+- **Official Docs**: Read the documentation of "Custom Css Js Loader" extention ( Recommended )
+- **Check for errors**: Open VS Code, press `Ctrl+Shift+P` and open Developer Tools, look for errors in the console
 
 ### Extensions Not Installing?
 - Make sure VS Code is installed and `code` command works
-
-### Permission Issues on Linux?
-Check vs code location by typing `which code` in the terminal
-```bash
-sudo chown -R $(whoami) "$(which code)"
-sudo chmod -R 777 "$(which code)"
-```
-if it does not work try this:
-```
-sudo nano /usr/share/applications/code.desktop
-```
-Find the line:
-```
-Exec=<VScode Location>/code %F
-```
-Replace with:
-```
-Exec=sudo code --no-sandbox --user-data-dir=/root/.vscode-root %F
-```
-Then save with <kbd>Ctrl+O</kbd> <kbd>Enter</kbd> and then exit with <kbd>Ctrl+X</kbd>
 
 ---
 
