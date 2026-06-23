@@ -1,0 +1,38 @@
+# General OS and editor artifacts
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.bak
+*~
+
+# Python artifacts (if any)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Node.js artifacts (unlikely but safe)
+node_modules/
+
+# Environment files
+.env
+.env.*
+
+# Build output directories (none for this repo, but common)
+dist/
+build/
+
+# VS Code settings (these are version‑controlled in this repo)
+# .vscode/  # keep if you have personal settings you don't want committed
+
+# Ignore the Claude worktree and temporary files, but keep .claude tracked
+# (The .claude directory is explicitly tracked, so do not ignore it)
+.claude/
+.claude/**
+
+# Ignore other temporary directories
+tmp/
+temp/
+
+# End of .gitignore

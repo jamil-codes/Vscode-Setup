@@ -1,7 +1,7 @@
 {
     // ==================== Version Info ====================
     "settings.version": "3.0.0",
-    "settings.lastUpdated": "28-03-2026",
+    "settings.lastUpdated": "23-06-2026",
     // ==================== Core Editor & Behavior ====================
     "editor.formatOnSave": true,
     "editor.formatOnPaste": true,

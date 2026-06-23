@@ -1,0 +1,2112 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>VSCode Setup — Ultimate Configuration</title>
+		<link rel="shortcut icon" href="assets/logo.svg" type="image/svg+xml" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+		<style>
+			*,
+			*::before,
+			*::after {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+			:root {
+				--bg: #03060f;
+				--bg2: #070c1a;
+				--surface: #0c1225;
+				--surface2: #111a30;
+				--surface3: #16213a;
+				--border: rgba(79, 142, 247, 0.12);
+				--border2: rgba(79, 142, 247, 0.22);
+				--accent: #4f8ef7;
+				--accent2: #a78bfa;
+				--accent3: #34d399;
+				--accent4: #f472b6;
+				--text: #dce6ff;
+				--text2: #7a8fb0;
+				--text3: #3d4f70;
+				--mono: "JetBrains Mono", monospace;
+				--sans: "Space Grotesk", sans-serif;
+				--r: 16px;
+				--r2: 12px;
+			}
+			html {
+				scroll-behavior: smooth;
+			}
+			body {
+				font-family: var(--sans);
+				background: var(--bg);
+				color: var(--text);
+				min-height: 100vh;
+				overflow-x: hidden;
+			}
+
+			/* SCROLLBAR */
+			::-webkit-scrollbar {
+				width: 3px;
+				height: 3px;
+			}
+			::-webkit-scrollbar-track {
+				background: transparent;
+			}
+			::-webkit-scrollbar-thumb {
+				background: var(--border2);
+				border-radius: 99px;
+			}
+
+			/* NAV */
+			#nav {
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+				z-index: 1000;
+				padding: 0 2.5rem;
+				height: 60px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				backdrop-filter: blur(24px);
+				-webkit-backdrop-filter: blur(24px);
+				background: rgba(3, 6, 15, 0);
+				border-bottom: 1px solid rgba(79, 142, 247, 0);
+				transition:
+					background 0.4s,
+					border-color 0.4s;
+			}
+			#nav.scrolled {
+				background: rgba(3, 6, 15, 0.88);
+				border-bottom-color: var(--border);
+			}
+			.nav-logo {
+				font-family: var(--mono);
+				font-size: 0.9rem;
+				font-weight: 700;
+				color: var(--text);
+				text-decoration: none;
+				letter-spacing: -0.02em;
+			}
+			.nav-logo em {
+				color: var(--accent);
+				font-style: normal;
+			}
+			.nav-links {
+				display: flex;
+				align-items: center;
+				gap: 2rem;
+				list-style: none;
+			}
+			.nav-links a {
+				color: var(--text2);
+				text-decoration: none;
+				font-size: 0.85rem;
+				font-weight: 500;
+				transition: color 0.2s;
+				letter-spacing: -0.01em;
+			}
+			.nav-links a:hover {
+				color: var(--text);
+			}
+			.nav-gh {
+				font-size: 0.8rem;
+				font-weight: 600;
+				padding: 0.45rem 1.1rem;
+				border-radius: 8px;
+				border: 1px solid var(--border2);
+				background: rgba(79, 142, 247, 0.08);
+				color: var(--accent) !important;
+				transition: all 0.2s;
+			}
+			.nav-gh:hover {
+				background: rgba(79, 142, 247, 0.16);
+				border-color: var(--accent);
+			}
+
+			/* HERO */
+			#hero {
+				position: relative;
+				width: 100%;
+				height: 100vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				overflow: hidden;
+			}
+			#bg-canvas {
+				position: absolute;
+				inset: 0;
+				width: 100%;
+				height: 100%;
+				z-index: 0;
+			}
+			.hero-glow {
+				position: absolute;
+				inset: 0;
+				z-index: 1;
+				background: radial-gradient(ellipse 70% 55% at 50% 45%, rgba(79, 142, 247, 0.07) 0%, transparent 70%);
+				pointer-events: none;
+			}
+			.hero-content {
+				position: relative;
+				z-index: 10;
+				text-align: center;
+				padding: 2rem;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+			.hero-pill {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.5rem;
+				font-family: var(--mono);
+				font-size: 0.7rem;
+				font-weight: 500;
+				color: var(--accent);
+				border: 1px solid rgba(79, 142, 247, 0.3);
+				border-radius: 99px;
+				padding: 0.35rem 1rem 0.35rem 0.5rem;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+				margin-bottom: 1.75rem;
+				backdrop-filter: blur(10px);
+				background: rgba(79, 142, 247, 0.06);
+				animation: fadeUp 0.7s ease both;
+			}
+			.hero-pill-dot {
+				width: 6px;
+				height: 6px;
+				border-radius: 50%;
+				background: var(--accent3);
+				animation: blink 2s infinite;
+			}
+			.hero-title {
+				font-size: clamp(3rem, 9vw, 7rem);
+				font-weight: 700;
+				line-height: 1;
+				letter-spacing: -0.03em;
+				animation: fadeUp 0.8s 0.08s ease both;
+				margin-bottom: 0.5rem;
+			}
+			.hero-title-line1 {
+				background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.7) 100%);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+			}
+			.hero-title-line2 {
+				background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+			}
+			.hero-sub {
+				font-size: clamp(0.95rem, 2.2vw, 1.2rem);
+				color: var(--text2);
+				font-weight: 400;
+				max-width: 520px;
+				margin: 1.25rem auto 2.25rem;
+				animation: fadeUp 0.9s 0.16s ease both;
+				line-height: 1.75;
+			}
+			.hero-actions {
+				display: flex;
+				gap: 0.85rem;
+				justify-content: center;
+				flex-wrap: wrap;
+				animation: fadeUp 1s 0.22s ease both;
+			}
+			.btn {
+				font-family: var(--sans);
+				font-size: 0.875rem;
+				font-weight: 600;
+				padding: 0.72rem 1.6rem;
+				border-radius: 10px;
+				border: none;
+				cursor: pointer;
+				text-decoration: none;
+				display: inline-flex;
+				align-items: center;
+				gap: 0.45rem;
+				transition: all 0.25s ease;
+				letter-spacing: -0.01em;
+			}
+			.btn-primary {
+				background: var(--accent);
+				color: #fff;
+				box-shadow: 0 0 0 0 rgba(79, 142, 247, 0.5);
+			}
+			.btn-primary:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 8px 30px rgba(79, 142, 247, 0.4);
+			}
+			.btn-ghost {
+				background: rgba(255, 255, 255, 0.05);
+				color: var(--text);
+				border: 1px solid var(--border2);
+				backdrop-filter: blur(8px);
+			}
+			.btn-ghost:hover {
+				background: rgba(255, 255, 255, 0.09);
+				transform: translateY(-2px);
+			}
+
+			/* HERO SCROLL */
+			.hero-scroll {
+				position: absolute;
+				bottom: 2.5rem;
+				left: 50%;
+				transform: translateX(-50%);
+				z-index: 10;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 0.5rem;
+				color: var(--text3);
+				font-size: 0.65rem;
+				letter-spacing: 0.18em;
+				text-transform: uppercase;
+				font-family: var(--mono);
+				animation: fadeIn 2s 1.2s ease both;
+			}
+			.scroll-line {
+				width: 1px;
+				height: 36px;
+				background: linear-gradient(to bottom, var(--accent), transparent);
+				animation: scrollPulse 2.5s infinite;
+			}
+
+			/* STATS BAR */
+			.stats-bar {
+				display: grid;
+				grid-template-columns: repeat(6, 1fr);
+				border-top: 1px solid var(--border);
+				border-bottom: 1px solid var(--border);
+				background: var(--bg2);
+			}
+			.stat-item {
+				padding: 1.75rem 1rem;
+				text-align: center;
+				border-right: 1px solid var(--border);
+				position: relative;
+				overflow: hidden;
+				transition: background 0.3s;
+			}
+			.stat-item:last-child {
+				border-right: none;
+			}
+			.stat-item::before {
+				content: "";
+				position: absolute;
+				inset: 0;
+				background: linear-gradient(135deg, rgba(79, 142, 247, 0.04), transparent);
+				opacity: 0;
+				transition: opacity 0.3s;
+			}
+			.stat-item:hover {
+				background: rgba(79, 142, 247, 0.03);
+			}
+			.stat-item:hover::before {
+				opacity: 1;
+			}
+			.stat-n {
+				font-family: var(--mono);
+				font-size: 1.8rem;
+				font-weight: 700;
+				line-height: 1;
+				background: linear-gradient(135deg, var(--accent), var(--accent2));
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+			}
+			.stat-l {
+				font-size: 0.72rem;
+				color: var(--text3);
+				margin-top: 0.3rem;
+				text-transform: uppercase;
+				letter-spacing: 0.1em;
+			}
+
+			/* CONTAINER */
+			.container {
+				max-width: 1180px;
+				margin: 0 auto;
+				padding: 0 2rem;
+			}
+
+			/* SECTION */
+			.section {
+				padding: 7rem 0;
+				position: relative;
+			}
+			.section-eye {
+				font-family: var(--mono);
+				font-size: 0.68rem;
+				font-weight: 500;
+				color: var(--accent);
+				text-transform: uppercase;
+				letter-spacing: 0.18em;
+				margin-bottom: 0.9rem;
+				display: flex;
+				align-items: center;
+				gap: 0.75rem;
+			}
+			.section-eye::before {
+				content: "";
+				width: 18px;
+				height: 1px;
+				background: var(--accent);
+				flex-shrink: 0;
+			}
+			.section-h {
+				font-size: clamp(1.8rem, 3.8vw, 2.9rem);
+				font-weight: 700;
+				letter-spacing: -0.025em;
+				margin-bottom: 1.1rem;
+				line-height: 1.12;
+			}
+			.section-p {
+				color: var(--text2);
+				font-size: 1rem;
+				line-height: 1.8;
+				max-width: 560px;
+			}
+
+			/* DIVIDER */
+			.hr {
+				width: 100%;
+				height: 1px;
+				background: linear-gradient(90deg, transparent, var(--border), transparent);
+				margin: 0;
+			}
+
+			/* ════════ STEPS ════════ */
+			#steps {
+				overflow: hidden;
+			}
+
+			.steps-intro {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 4rem;
+				align-items: end;
+				margin-bottom: 4rem;
+			}
+			.steps-intro-right {
+				display: flex;
+				flex-direction: column;
+				gap: 0.5rem;
+				align-items: flex-end;
+			}
+			.os-toggle {
+				display: flex;
+				gap: 0;
+				background: var(--surface);
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				overflow: hidden;
+				margin-bottom: 0.75rem;
+			}
+			.os-btn {
+				font-family: var(--mono);
+				font-size: 0.72rem;
+				font-weight: 500;
+				padding: 0.55rem 1.1rem;
+				border: none;
+				background: transparent;
+				color: var(--text2);
+				cursor: pointer;
+				transition: all 0.2s;
+				display: flex;
+				align-items: center;
+				gap: 0.4rem;
+			}
+			.os-btn.active {
+				background: var(--accent);
+				color: #fff;
+			}
+			.os-btn:not(.active):hover {
+				background: rgba(79, 142, 247, 0.06);
+				color: var(--text);
+			}
+			.os-hint {
+				font-size: 0.75rem;
+				color: var(--text3);
+				font-family: var(--mono);
+			}
+
+			/* STEP CARDS */
+			.steps-flow {
+				display: flex;
+				flex-direction: column;
+				gap: 0;
+				position: relative;
+			}
+			.steps-flow::before {
+				content: "";
+				position: absolute;
+				left: 28px;
+				top: 60px;
+				bottom: 60px;
+				width: 1px;
+				background: linear-gradient(to bottom, var(--accent), rgba(79, 142, 247, 0.1));
+				z-index: 0;
+			}
+			.step-row {
+				display: grid;
+				grid-template-columns: 56px 1fr;
+				gap: 0 2rem;
+				padding: 0 0 3rem 0;
+				position: relative;
+			}
+			.step-row:last-child {
+				padding-bottom: 0;
+			}
+			.step-dot-col {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				padding-top: 0.25rem;
+				position: relative;
+				z-index: 1;
+			}
+			.step-dot {
+				width: 56px;
+				height: 56px;
+				border-radius: 14px;
+				flex-shrink: 0;
+				background: var(--surface2);
+				border: 1px solid var(--border2);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 1.35rem;
+				transition: all 0.35s;
+				box-shadow: 0 0 0 0 rgba(79, 142, 247, 0);
+			}
+			.step-row:hover .step-dot {
+				background: rgba(79, 142, 247, 0.1);
+				border-color: var(--accent);
+				box-shadow: 0 0 20px rgba(79, 142, 247, 0.15);
+			}
+			.step-body {
+				background: var(--surface);
+				border: 1px solid var(--border);
+				border-radius: var(--r);
+				padding: 1.75rem;
+				transition: all 0.35s;
+				overflow: hidden;
+			}
+			.step-row:hover .step-body {
+				border-color: var(--border2);
+				box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+			}
+			.step-head {
+				display: flex;
+				align-items: baseline;
+				gap: 1rem;
+				margin-bottom: 0.5rem;
+			}
+			.step-num {
+				font-family: var(--mono);
+				font-size: 0.65rem;
+				color: var(--accent);
+				text-transform: uppercase;
+				letter-spacing: 0.15em;
+				flex-shrink: 0;
+			}
+			.step-title {
+				font-size: 1.05rem;
+				font-weight: 700;
+				color: var(--text);
+			}
+			.step-desc {
+				color: var(--text2);
+				font-size: 0.875rem;
+				line-height: 1.7;
+				margin-bottom: 1.25rem;
+			}
+
+			/* CMD BLOCK */
+			.cmd-shell {
+				background: var(--bg);
+				border: 1px solid var(--border);
+				border-radius: var(--r2);
+				overflow: hidden;
+			}
+			.cmd-shell-bar {
+				padding: 0.55rem 0.9rem;
+				background: rgba(255, 255, 255, 0.02);
+				border-bottom: 1px solid var(--border);
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+			.shell-dots {
+				display: flex;
+				gap: 5px;
+			}
+			.sh-dot {
+				width: 9px;
+				height: 9px;
+				border-radius: 50%;
+			}
+			.sh-r {
+				background: #ff5f56;
+			}
+			.sh-y {
+				background: #ffbd2e;
+			}
+			.sh-g {
+				background: #27c93f;
+			}
+			.shell-os-label {
+				font-family: var(--mono);
+				font-size: 0.65rem;
+				color: var(--text3);
+			}
+			.copy-btn {
+				font-family: var(--mono);
+				font-size: 0.65rem;
+				background: transparent;
+				border: 1px solid var(--border);
+				border-radius: 5px;
+				color: var(--text3);
+				padding: 0.2rem 0.55rem;
+				cursor: pointer;
+				transition: all 0.2s;
+			}
+			.copy-btn:hover {
+				color: var(--accent);
+				border-color: var(--accent);
+			}
+			.copy-btn.ok {
+				color: var(--accent3);
+				border-color: var(--accent3);
+			}
+			.cmd-body {
+				padding: 1rem 1.1rem;
+				font-family: var(--mono);
+				font-size: 0.8rem;
+				line-height: 1.75;
+				color: var(--text);
+				overflow-x: auto;
+				white-space: pre;
+			}
+			.cmd-body .p {
+				color: var(--accent3);
+			} /* prompt */
+			.cmd-body .c {
+				color: var(--text3);
+				font-style: italic;
+			} /* comment */
+			.cmd-body .k {
+				color: var(--accent2);
+			} /* keyword/flag */
+			.cmd-body .s {
+				color: var(--accent3);
+			} /* string */
+
+			/* PREREQUISITE */
+			.prereq {
+				margin-top: 3rem;
+				padding: 1.5rem 1.75rem;
+				background: rgba(79, 142, 247, 0.05);
+				border: 1px solid rgba(79, 142, 247, 0.15);
+				border-radius: var(--r);
+				display: flex;
+				gap: 1.1rem;
+			}
+			.prereq-icon {
+				font-size: 1.2rem;
+				flex-shrink: 0;
+				margin-top: 0.1rem;
+			}
+			.prereq-text {
+				font-size: 0.875rem;
+				color: var(--text2);
+				line-height: 1.75;
+			}
+			.prereq-text strong {
+				color: var(--text);
+				font-weight: 600;
+			}
+			.prereq-text a {
+				color: var(--accent);
+				text-decoration: none;
+			}
+			.prereq-text a:hover {
+				text-decoration: underline;
+			}
+
+			/* ════════ FILES ════════ */
+			.files-wrap {
+				display: grid;
+				grid-template-columns: 260px 1fr;
+				gap: 1.25rem;
+				margin-top: 3rem;
+				height: 580px;
+			}
+			.file-panel {
+				background: var(--surface);
+				border: 1px solid var(--border);
+				border-radius: var(--r);
+				overflow: hidden;
+				display: flex;
+				flex-direction: column;
+			}
+			.panel-head {
+				padding: 0.75rem 1rem;
+				border-bottom: 1px solid var(--border);
+				font-family: var(--mono);
+				font-size: 0.68rem;
+				color: var(--text3);
+				text-transform: uppercase;
+				letter-spacing: 0.12em;
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+				background: rgba(255, 255, 255, 0.01);
+			}
+			.file-list-inner {
+				flex: 1;
+				overflow-y: auto;
+				padding: 0.4rem;
+			}
+			.fitem {
+				display: flex;
+				align-items: center;
+				gap: 0.7rem;
+				padding: 0.65rem 0.9rem;
+				border-radius: 9px;
+				cursor: pointer;
+				transition: all 0.18s;
+				font-family: var(--mono);
+				font-size: 0.78rem;
+				color: var(--text2);
+			}
+			.fitem:hover {
+				background: rgba(79, 142, 247, 0.07);
+				color: var(--text);
+			}
+			.fitem.on {
+				background: rgba(79, 142, 247, 0.11);
+				color: var(--accent);
+				border: 1px solid rgba(79, 142, 247, 0.18);
+			}
+			.fitem-icon {
+				font-size: 0.9rem;
+				flex-shrink: 0;
+			}
+			.fitem-name {
+				flex: 1;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+			.fitem-size {
+				font-size: 0.62rem;
+				color: var(--text3);
+				background: rgba(255, 255, 255, 0.04);
+				padding: 0.1rem 0.4rem;
+				border-radius: 4px;
+				flex-shrink: 0;
+			}
+			.viewer-panel {
+				flex-direction: column;
+			}
+			.viewer-bar {
+				padding: 0.65rem 1rem;
+				border-bottom: 1px solid var(--border);
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				background: rgba(255, 255, 255, 0.01);
+				flex-shrink: 0;
+			}
+			.viewer-file {
+				font-family: var(--mono);
+				font-size: 0.8rem;
+				color: var(--text2);
+				display: flex;
+				align-items: center;
+				gap: 0.55rem;
+			}
+			.viewer-acts {
+				display: flex;
+				gap: 0.4rem;
+			}
+			.vbtn {
+				font-family: var(--mono);
+				font-size: 0.68rem;
+				padding: 0.3rem 0.75rem;
+				border-radius: 6px;
+				border: 1px solid var(--border);
+				background: transparent;
+				color: var(--text2);
+				cursor: pointer;
+				transition: all 0.2s;
+				text-decoration: none;
+				display: inline-flex;
+				align-items: center;
+				gap: 0.35rem;
+			}
+			.vbtn:hover {
+				background: rgba(79, 142, 247, 0.07);
+				border-color: var(--border2);
+				color: var(--accent);
+			}
+			.vbtn.ok2 {
+				border-color: var(--accent3);
+				color: var(--accent3);
+			}
+			.viewer-code {
+				flex: 1;
+				overflow: auto;
+				padding: 1.1rem 1.25rem;
+			}
+			.viewer-code pre {
+				font-family: var(--mono);
+				font-size: 0.77rem;
+				line-height: 1.85;
+				color: var(--text);
+				margin: 0;
+				white-space: pre;
+			}
+			.ln {
+				display: inline-block;
+				min-width: 2.2rem;
+				color: var(--text3);
+				user-select: none;
+				text-align: right;
+				padding-right: 1.2rem;
+				font-size: 0.72rem;
+				opacity: 0.6;
+			}
+			.viewer-empty {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				height: 100%;
+				gap: 0.85rem;
+				color: var(--text3);
+			}
+			.viewer-empty-icon {
+				font-size: 2.5rem;
+				opacity: 0.25;
+			}
+			.viewer-empty-txt {
+				font-family: var(--mono);
+				font-size: 0.78rem;
+			}
+
+			/* ════════ EXTENSIONS ════════ */
+			.ext-search-wrap {
+				margin-top: 2rem;
+				margin-bottom: 1.5rem;
+				position: relative;
+				max-width: 340px;
+			}
+			.ext-search {
+				width: 100%;
+				padding: 0.65rem 1rem 0.65rem 2.5rem;
+				background: var(--surface);
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				font-family: var(--mono);
+				font-size: 0.8rem;
+				color: var(--text);
+				outline: none;
+				transition: border-color 0.2s;
+			}
+			.ext-search:focus {
+				border-color: var(--border2);
+			}
+			.ext-search::placeholder {
+				color: var(--text3);
+			}
+			.ext-search-icon {
+				position: absolute;
+				left: 0.75rem;
+				top: 50%;
+				transform: translateY(-50%);
+				font-size: 0.85rem;
+				pointer-events: none;
+				color: var(--text3);
+			}
+			.ext-cmd-row {
+				display: flex;
+				gap: 0.5rem;
+				flex-wrap: wrap;
+				margin-bottom: 2rem;
+			}
+			.ext-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+				gap: 0.85rem;
+			}
+			.ext-card {
+				background: var(--surface);
+				border: 1px solid var(--border);
+				border-radius: var(--r2);
+				padding: 1.1rem 1.15rem;
+				transition: all 0.22s;
+				cursor: pointer;
+				text-decoration: none;
+				display: flex;
+				flex-direction: column;
+			}
+			.ext-card:hover {
+				border-color: var(--border2);
+				transform: translateY(-3px);
+				box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+			}
+			.ext-top {
+				display: flex;
+				align-items: flex-start;
+				justify-content: space-between;
+				gap: 0.5rem;
+				margin-bottom: 0.5rem;
+			}
+			.ext-name {
+				font-weight: 600;
+				font-size: 0.88rem;
+				color: var(--text);
+				line-height: 1.2;
+			}
+			.ext-arrow {
+				color: var(--text3);
+				font-size: 0.8rem;
+				flex-shrink: 0;
+				margin-top: 0.1rem;
+			}
+			.ext-id {
+				font-family: var(--mono);
+				font-size: 0.68rem;
+				color: var(--text3);
+				margin-bottom: 0.6rem;
+			}
+			.ext-desc2 {
+				font-size: 0.8rem;
+				color: var(--text2);
+				line-height: 1.55;
+				flex: 1;
+			}
+
+			/* CURSOR EXT */
+			.cursor-pills {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5rem;
+				margin-top: 1.5rem;
+			}
+			.cursor-pill {
+				font-family: var(--mono);
+				font-size: 0.72rem;
+				padding: 0.45rem 0.85rem;
+				background: var(--surface);
+				border: 1px solid var(--border);
+				border-radius: 8px;
+				color: var(--text2);
+				cursor: pointer;
+				transition: all 0.18s;
+				text-decoration: none;
+				display: inline-block;
+			}
+			.cursor-pill:hover {
+				border-color: var(--accent2);
+				color: var(--accent2);
+				background: rgba(167, 139, 250, 0.07);
+			}
+
+			/* ════════ KEYBINDINGS ════════ */
+			.kb-tabs {
+				display: flex;
+				gap: 0;
+				background: var(--surface);
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				overflow: hidden;
+				width: fit-content;
+				margin-bottom: 1.5rem;
+			}
+			.kb-tab {
+				font-family: var(--mono);
+				font-size: 0.72rem;
+				font-weight: 500;
+				padding: 0.55rem 1.2rem;
+				border: none;
+				background: transparent;
+				color: var(--text2);
+				cursor: pointer;
+				transition: all 0.2s;
+			}
+			.kb-tab.on {
+				background: var(--accent);
+				color: #fff;
+			}
+			.kb-tab:not(.on):hover {
+				background: rgba(79, 142, 247, 0.06);
+				color: var(--text);
+			}
+
+			.kb-table-wrap {
+				background: var(--surface);
+				border: 1px solid var(--border);
+				border-radius: var(--r);
+				overflow: auto;
+				max-height: 460px;
+			}
+			table {
+				width: 100%;
+				border-collapse: collapse;
+				font-size: 0.83rem;
+			}
+			th {
+				text-align: left;
+				padding: 0.75rem 1.25rem;
+				border-bottom: 1px solid var(--border);
+				color: var(--text3);
+				font-family: var(--mono);
+				font-size: 0.66rem;
+				text-transform: uppercase;
+				letter-spacing: 0.12em;
+				background: rgba(255, 255, 255, 0.01);
+				position: sticky;
+				top: 0;
+			}
+			td {
+				padding: 0.8rem 1.25rem;
+				border-bottom: 1px solid rgba(79, 142, 247, 0.05);
+				vertical-align: middle;
+			}
+			tr:last-child td {
+				border-bottom: none;
+			}
+			tr:hover td {
+				background: rgba(79, 142, 247, 0.04);
+			}
+			kbd {
+				background: var(--surface2);
+				border: 1px solid var(--border);
+				border-radius: 5px;
+				padding: 0.18rem 0.5rem;
+				font-size: 0.72rem;
+				color: var(--text);
+				font-family: var(--mono);
+				white-space: nowrap;
+			}
+			.kb-cmd-text {
+				font-family: var(--mono);
+				font-size: 0.78rem;
+			}
+			.kb-rm {
+				color: var(--text3);
+			}
+			.kb-add {
+				color: var(--accent);
+			}
+			.kb-when-text {
+				font-family: var(--mono);
+				font-size: 0.68rem;
+				color: var(--text3);
+			}
+
+			.kb-raw-wrap {
+				background: var(--surface);
+				border: 1px solid var(--border);
+				border-radius: var(--r);
+				overflow: hidden;
+				display: none;
+			}
+			.kb-raw-wrap.on {
+				display: block;
+			}
+			.kb-raw-head {
+				padding: 0.6rem 1rem;
+				background: rgba(255, 255, 255, 0.02);
+				border-bottom: 1px solid var(--border);
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+			.kb-raw-body {
+				padding: 1.1rem 1.25rem;
+				overflow: auto;
+				max-height: 420px;
+			}
+			.kb-raw-body pre {
+				font-family: var(--mono);
+				font-size: 0.77rem;
+				line-height: 1.8;
+				color: var(--text);
+				white-space: pre;
+			}
+
+			/* ════════ MODAL ════════ */
+			.modal-overlay {
+				display: none;
+				position: fixed;
+				inset: 0;
+				background: rgba(0, 0, 0, 0.8);
+				z-index: 9000;
+				align-items: center;
+				justify-content: center;
+				backdrop-filter: blur(12px);
+			}
+			.modal-overlay.on {
+				display: flex;
+				animation: fadeIn 0.2s ease;
+			}
+			.modal-box {
+				background: var(--surface);
+				border: 1px solid var(--border2);
+				border-radius: 20px;
+				width: min(900px, 94vw);
+				max-height: 87vh;
+				display: flex;
+				flex-direction: column;
+				overflow: hidden;
+				box-shadow:
+					0 40px 120px rgba(0, 0, 0, 0.6),
+					0 0 60px rgba(79, 142, 247, 0.08);
+				animation: modalIn 0.3s ease;
+			}
+			.modal-head {
+				padding: 1.1rem 1.5rem;
+				border-bottom: 1px solid var(--border);
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				flex-shrink: 0;
+			}
+			.modal-fname {
+				font-family: var(--mono);
+				font-size: 0.88rem;
+				color: var(--text);
+				font-weight: 500;
+			}
+			.modal-acts {
+				display: flex;
+				gap: 0.4rem;
+				align-items: center;
+			}
+			.modal-close {
+				background: transparent;
+				border: none;
+				color: var(--text3);
+				cursor: pointer;
+				font-size: 1rem;
+				padding: 0.3rem 0.5rem;
+				border-radius: 6px;
+				transition: all 0.18s;
+			}
+			.modal-close:hover {
+				background: rgba(255, 255, 255, 0.07);
+				color: var(--text);
+			}
+			.modal-body {
+				flex: 1;
+				overflow: auto;
+				padding: 1.5rem;
+			}
+			.modal-body pre {
+				font-family: var(--mono);
+				font-size: 0.77rem;
+				line-height: 1.85;
+				color: var(--text);
+				white-space: pre;
+			}
+
+			/* ════════ FOOTER ════════ */
+			footer {
+				border-top: 1px solid var(--border);
+				padding: 3.5rem 0;
+			}
+			.foot-inner {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 1.25rem;
+				text-align: center;
+			}
+			.foot-logo {
+				font-family: var(--mono);
+				font-size: 1rem;
+				font-weight: 700;
+				color: var(--text);
+			}
+			.foot-logo em {
+				color: var(--accent);
+				font-style: normal;
+			}
+			.foot-links {
+				display: flex;
+				gap: 2rem;
+				flex-wrap: wrap;
+				justify-content: center;
+			}
+			.foot-links a {
+				color: var(--text2);
+				text-decoration: none;
+				font-size: 0.83rem;
+				transition: color 0.2s;
+			}
+			.foot-links a:hover {
+				color: var(--accent);
+			}
+			.foot-copy {
+				font-size: 0.75rem;
+				color: var(--text3);
+			}
+
+			/* ════════ TOAST ════════ */
+			.toast {
+				position: fixed;
+				bottom: 1.75rem;
+				right: 1.75rem;
+				background: var(--surface2);
+				border: 1px solid rgba(52, 211, 153, 0.3);
+				border-radius: 10px;
+				padding: 0.75rem 1.15rem;
+				font-family: var(--mono);
+				font-size: 0.78rem;
+				color: var(--accent3);
+				z-index: 9999;
+				transform: translateY(80px);
+				opacity: 0;
+				transition: all 0.3s ease;
+				display: flex;
+				align-items: center;
+				gap: 0.55rem;
+				box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+			}
+			.toast.on {
+				transform: translateY(0);
+				opacity: 1;
+			}
+
+			/* SYNTAX */
+			.t-comment {
+				color: #3a4f70;
+				font-style: italic;
+			}
+			.t-key {
+				color: #93c5fd;
+			}
+			.t-str {
+				color: #6ee7b7;
+			}
+			.t-num {
+				color: #f9a8d4;
+			}
+			.t-bool {
+				color: #fbbf24;
+			}
+			.t-null {
+				color: #64748b;
+			}
+			.t-punct {
+				color: #475569;
+			}
+			.t-prop {
+				color: #c4b5fd;
+			}
+			.t-func {
+				color: #7dd3fc;
+			}
+			.t-kw {
+				color: #a78bfa;
+			}
+
+			/* SECTION GRID BG */
+			.grid-bg {
+				position: absolute;
+				inset: 0;
+				pointer-events: none;
+				background-image: linear-gradient(rgba(79, 142, 247, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(79, 142, 247, 0.02) 1px, transparent 1px);
+				background-size: 50px 50px;
+			}
+
+			/* BLOBS */
+			.blob {
+				position: absolute;
+				border-radius: 50%;
+				filter: blur(100px);
+				pointer-events: none;
+				z-index: 0;
+			}
+			.blob-a {
+				width: 700px;
+				height: 700px;
+				background: rgba(79, 142, 247, 0.04);
+				top: -200px;
+				right: -200px;
+			}
+			.blob-b {
+				width: 500px;
+				height: 500px;
+				background: rgba(167, 139, 250, 0.04);
+				bottom: -100px;
+				left: -150px;
+			}
+
+			/* ANIMATIONS */
+			@keyframes fadeUp {
+				from {
+					opacity: 0;
+					transform: translateY(22px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+			@keyframes fadeIn {
+				from {
+					opacity: 0;
+				}
+				to {
+					opacity: 1;
+				}
+			}
+			@keyframes scrollPulse {
+				0%,
+				100% {
+					opacity: 0.25;
+					transform: scaleY(0.7);
+				}
+				50% {
+					opacity: 1;
+					transform: scaleY(1);
+				}
+			}
+			@keyframes blink {
+				0%,
+				100% {
+					opacity: 1;
+				}
+				50% {
+					opacity: 0.3;
+				}
+			}
+			@keyframes modalIn {
+				from {
+					opacity: 0;
+					transform: scale(0.96) translateY(8px);
+				}
+				to {
+					opacity: 1;
+					transform: scale(1) translateY(0);
+				}
+			}
+
+			/* RESPONSIVE */
+			@media (max-width: 900px) {
+				.steps-intro {
+					grid-template-columns: 1fr;
+					gap: 2rem;
+				}
+				.steps-intro-right {
+					align-items: flex-start;
+				}
+				.files-wrap {
+					grid-template-columns: 1fr;
+					height: auto;
+				}
+				.file-list-inner {
+					max-height: 180px;
+				}
+				.viewer-code {
+					max-height: 350px;
+				}
+				.stats-bar {
+					grid-template-columns: repeat(3, 1fr);
+				}
+				.stat-item:nth-child(3) {
+					border-right: none;
+				}
+				.stat-item:nth-child(4) {
+					border-top: 1px solid var(--border);
+				}
+			}
+			@media (max-width: 600px) {
+				#nav .nav-links {
+					display: none;
+				}
+				.stats-bar {
+					grid-template-columns: repeat(2, 1fr);
+				}
+				.stat-item:nth-child(2) {
+					border-right: none;
+				}
+				.stat-item:nth-child(3) {
+					border-top: 1px solid var(--border);
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<!-- NAV -->
+		<nav id="nav">
+			<a href="#" class="nav-logo">vscode<em>.</em>setup</a>
+			<ul class="nav-links">
+				<li><a href="#steps">Setup</a></li>
+				<li><a href="#files">Files</a></li>
+				<li><a href="#extensions">Extensions</a></li>
+				<li><a href="#keybindings">Keybindings</a></li>
+				<li><a href="https://github.com/jamil-codes/Vscode-Setup" target="_blank" class="nav-gh">GitHub ↗</a></li>
+			</ul>
+		</nav>
+
+		<!-- HERO -->
+		<section id="hero">
+			<canvas id="bg-canvas"></canvas>
+			<div class="hero-glow"></div>
+			<div class="hero-content">
+				<div class="hero-pill">
+					<span class="hero-pill-dot"></span>
+					v3.0.0 &nbsp;·&nbsp; updated 28 mar 2026
+				</div>
+				<h1 class="hero-title">
+					<div class="hero-title-line1">The Perfect</div>
+					<div class="hero-title-line2">VSCode Setup</div>
+				</h1>
+				<p class="hero-sub">A meticulously crafted editor configuration built for focus, speed, and a frictionless workflow — 36 extensions, 2,200+ lines of settings, zero compromises.</p>
+				<div class="hero-actions">
+					<a href="#steps" class="btn btn-primary">⚡ Get Started in 5 min</a>
+					<a href="https://github.com/jamil-codes/Vscode-Setup" target="_blank" rel="noopener" class="btn btn-ghost">⭐ Star on GitHub</a>
+				</div>
+			</div>
+			<div class="hero-scroll">
+				<span>scroll</span>
+				<div class="scroll-line"></div>
+			</div>
+		</section>
+
+		<!-- STATS BAR -->
+		<div class="stats-bar">
+			<div class="stat-item"><div class="stat-n">36</div><div class="stat-l">Extensions</div></div>
+			<div class="stat-item"><div class="stat-n">2.2k</div><div class="stat-l">Settings Lines</div></div>
+			<div class="stat-item"><div class="stat-n">5min</div><div class="stat-l">Setup Time</div></div>
+			<div class="stat-item"><div class="stat-n">v3.0</div><div class="stat-l">Config Version</div></div>
+			<div class="stat-item"><div class="stat-n">3</div><div class="stat-l">Platforms</div></div>
+			<div class="stat-item"><div class="stat-n">∞</div><div class="stat-l">Productivity</div></div>
+		</div>
+
+		<!-- SETUP STEPS -->
+		<section id="steps" class="section" style="position: relative; overflow: hidden">
+			<div class="blob blob-a"></div>
+			<div class="grid-bg"></div>
+			<div class="container" style="position: relative; z-index: 1">
+				<div class="steps-intro">
+					<div>
+						<div class="section-eye">Quick Start</div>
+						<h2 class="section-h">Up and running<br />in five minutes</h2>
+						<p class="section-p">Follow four steps to transform VS Code into a precision instrument. Every command is ready to copy — just pick your platform.</p>
+					</div>
+					<div class="steps-intro-right">
+						<div style="font-family: var(--mono); font-size: 0.68rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.5rem">Select your platform</div>
+						<div class="os-toggle">
+							<button class="os-btn active" id="os-mac" onclick="setOS('mac')">🍎 macOS / Linux</button>
+							<button class="os-btn" id="os-win" onclick="setOS('win')">🪟 Windows</button>
+						</div>
+						<div class="os-hint" id="os-hint">All terminal commands shown for macOS/Linux</div>
+					</div>
+				</div>
+
+				<div class="steps-flow">
+					<!-- STEP 1 -->
+					<div class="step-row">
+						<div class="step-dot-col"><div class="step-dot">📦</div></div>
+						<div class="step-body">
+							<div class="step-head">
+								<span class="step-num">Step 01</span>
+								<h3 class="step-title">Clone or download the repository</h3>
+							</div>
+							<p class="step-desc">Get all the config files onto your machine. Git clone is recommended, but downloading the ZIP works equally well.</p>
+							<div class="cmd-shell">
+								<div class="cmd-shell-bar">
+									<div class="shell-dots"><div class="sh-dot sh-r"></div><div class="sh-dot sh-y"></div><div class="sh-dot sh-g"></div></div>
+									<span class="shell-os-label" id="s1-label">bash</span>
+									<button class="copy-btn" onclick="copyShell(this, 's1')">copy</button>
+								</div>
+								<div class="cmd-body" id="s1-mac"><span class="p">$ </span>git clone https://github.com/jamil-codes/Vscode-Setup.git <span class="p">$ </span>cd Vscode-Setup</div>
+								<div class="cmd-body" id="s1-win" style="display: none"
+									><span class="c"># Download ZIP: GitHub → Code → Download ZIP</span>
+									<span class="c"># Extract the folder, then open PowerShell inside it:</span>
+									<span class="p">PS&gt; </span>cd Vscode-Setup</div
+								>
+							</div>
+						</div>
+					</div>
+
+					<!-- STEP 2 -->
+					<div class="step-row">
+						<div class="step-dot-col"><div class="step-dot">🧩</div></div>
+						<div class="step-body">
+							<div class="step-head">
+								<span class="step-num">Step 02</span>
+								<h3 class="step-title">Install all 36 extensions at once</h3>
+							</div>
+							<p class="step-desc">One command installs everything via the <code style="font-family: var(--mono); font-size: 0.85em; color: var(--accent)">code</code> CLI. The <code style="font-family: var(--mono); font-size: 0.85em; color: var(--accent2)">--force</code> flag ensures updates apply cleanly.</p>
+							<div class="cmd-shell">
+								<div class="cmd-shell-bar">
+									<div class="shell-dots"><div class="sh-dot sh-r"></div><div class="sh-dot sh-y"></div><div class="sh-dot sh-g"></div></div>
+									<span class="shell-os-label" id="s2-label">bash</span>
+									<button class="copy-btn" onclick="copyShell(this, 's2')">copy</button>
+								</div>
+								<div class="cmd-body" id="s2-mac"><span class="p">$ </span>cat extensions.txt | xargs -n 1 code --force --install-extension</div>
+								<div class="cmd-body" id="s2-win" style="display: none"><span class="p">PS&gt; </span>Get-Content extensions.txt | ForEach-Object { code --force --install-extension $_ }</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- STEP 3 -->
+					<div class="step-row">
+						<div class="step-dot-col"><div class="step-dot">⚙️</div></div>
+						<div class="step-body">
+							<div class="step-head">
+								<span class="step-num">Step 03</span>
+								<h3 class="step-title">Apply settings &amp; keybindings</h3>
+							</div>
+							<p class="step-desc">Your existing config is backed up before anything is replaced — fully reversible. Settings go to the VS Code user profile directory.</p>
+							<div class="cmd-shell">
+								<div class="cmd-shell-bar">
+									<div class="shell-dots"><div class="sh-dot sh-r"></div><div class="sh-dot sh-y"></div><div class="sh-dot sh-g"></div></div>
+									<span class="shell-os-label" id="s3-label">bash</span>
+									<button class="copy-btn" onclick="copyShell(this, 's3')">copy</button>
+								</div>
+								<div class="cmd-body" id="s3-mac"
+									><span class="c"># Backup existing settings first</span> <span class="p">$ </span>cp ~/.config/Code/User/settings.json \ ~/.config/Code/User/settings.json.backup 2>/dev/null || true
+									<span class="c"># Apply new settings and keybindings</span>
+									<span class="p">$ </span>cp settings.json ~/.config/Code/User/settings.json <span class="p">$ </span>cp keybindings.json ~/.config/Code/User/keybindings.json</div
+								>
+								<div class="cmd-body" id="s3-win" style="display: none"
+									><span class="c"># Backup existing settings first</span> <span class="p">PS&gt; </span>Copy-Item "$env:APPDATA\Code\User\settings.json" ` "$env:APPDATA\Code\User\settings.json.backup" -ErrorAction SilentlyContinue
+									<span class="c"># Apply new settings and keybindings</span>
+									<span class="p">PS&gt; </span>Copy-Item settings.json "$env:APPDATA\Code\User\settings.json" <span class="p">PS&gt; </span>Copy-Item keybindings.json "$env:APPDATA\Code\User\keybindings.json" ` -ErrorAction SilentlyContinue</div
+								>
+							</div>
+						</div>
+					</div>
+
+					<!-- STEP 4 -->
+					<div class="step-row">
+						<div class="step-dot-col"><div class="step-dot">🎨</div></div>
+						<div class="step-body">
+							<div class="step-head">
+								<span class="step-num">Step 04</span>
+								<h3 class="step-title">Install custom CSS &amp; JS</h3>
+							</div>
+							<p class="step-desc">Copies the visual tweak files to your home directory, then update the paths in <code style="font-family: var(--mono); font-size: 0.85em; color: var(--accent)">settings.json</code>. Finish by reloading via the Command Palette.</p>
+							<div class="cmd-shell">
+								<div class="cmd-shell-bar">
+									<div class="shell-dots"><div class="sh-dot sh-r"></div><div class="sh-dot sh-y"></div><div class="sh-dot sh-g"></div></div>
+									<span class="shell-os-label" id="s4-label">bash</span>
+									<button class="copy-btn" onclick="copyShell(this, 's4')">copy</button>
+								</div>
+								<div class="cmd-body" id="s4-mac"
+									><span class="p">$ </span>cp custom-vscode.css ~/ <span class="p">$ </span>cp vscode-script.js ~/
+									<span class="c"># In settings.json, set vscode_custom_css.imports to:</span>
+									<span class="c"># "file:///${userHome}/custom-vscode.css"</span>
+									<span class="c"># "file:///${userHome}/vscode-script.js"</span>
+									<span class="c"># Then: Ctrl+Shift+P → "Reload Custom CSS and JS"</span></div
+								>
+								<div class="cmd-body" id="s4-win" style="display: none"
+									><span class="p">PS&gt; </span>Copy-Item custom-vscode.css "$env:USERPROFILE\" <span class="p">PS&gt; </span>Copy-Item vscode-script.js "$env:USERPROFILE\"
+									<span class="c"># In settings.json, set vscode_custom_css.imports to:</span>
+									<span class="c"># "file:///C:/Users/&lt;YOU&gt;/custom-vscode.css"</span>
+									<span class="c"># "file:///C:/Users/&lt;YOU&gt;/vscode-script.js"</span>
+									<span class="c"># Then: Ctrl+Shift+P → "Reload Custom CSS and JS"</span></div
+								>
+							</div>
+						</div>
+					</div> </div
+				><!-- /steps-flow -->
+
+				<div class="prereq">
+					<span class="prereq-icon">💡</span>
+					<div class="prereq-text"> <strong>Prerequisites:</strong> Install <strong>VS Code 1.85+</strong> using the .deb/.rpm package on Linux (not Snap) for full compatibility. Install the <strong>Geist Mono</strong> font from <a href="https://vercel.com/font" target="_blank">vercel.com/font</a> for the intended typography. After any VS Code update, re-run the "Reload Custom CSS and JS" command to restore visual tweaks. </div>
+				</div>
+			</div>
+		</section>
+
+		<div class="hr"></div>
+
+		<!-- FILES -->
+		<section id="files" class="section" style="position: relative; overflow: hidden">
+			<div class="blob blob-b"></div>
+			<div class="container" style="position: relative; z-index: 1">
+				<div class="section-eye">Config Files</div>
+				<h2 class="section-h">Browse, copy &amp; download<br />every file</h2>
+				<p class="section-p">All configuration files are embedded here. Click any file to preview with syntax highlighting — then copy or download in one click.</p>
+
+				<div class="files-wrap">
+					<div class="file-panel">
+						<div class="panel-head">📁 Repository</div>
+						<div class="file-list-inner" id="file-list"></div>
+					</div>
+					<div class="file-panel viewer-panel">
+						<div class="viewer-bar">
+							<div class="viewer-file">
+								<span id="vw-icon">📄</span>
+								<span id="vw-name">Select a file to preview</span>
+							</div>
+							<div class="viewer-acts">
+								<button class="vbtn" id="vw-expand" onclick="openModal()" style="display: none">⤢ Expand</button>
+								<button class="vbtn" id="vw-copy" onclick="copyCurrentFile()" style="display: none">⎘ Copy</button>
+								<a class="vbtn" id="vw-dl" href="#" download style="display: none">↓ Download</a>
+							</div>
+						</div>
+						<div class="viewer-code" id="vw-code">
+							<div class="viewer-empty">
+								<span class="viewer-empty-icon">📂</span>
+								<span class="viewer-empty-txt">Click a file to preview it</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<div class="hr"></div>
+
+		<!-- EXTENSIONS -->
+		<section id="extensions" class="section">
+			<div class="container">
+				<div class="section-eye">Extensions</div>
+				<h2 class="section-h">36 hand-picked extensions</h2>
+				<p class="section-p">Every extension earns its place — from smart formatting to visual polish. Click any card to open it in the VS Code Marketplace.</p>
+
+				<div class="ext-cmd-row">
+					<button class="copy-btn" style="padding: 0.45rem 0.9rem; font-size: 0.72rem" onclick="copyExtCmd('mac')">⎘ Install command (macOS/Linux)</button>
+					<button class="copy-btn" style="padding: 0.45rem 0.9rem; font-size: 0.72rem" onclick="copyExtCmd('win')">⎘ Install command (Windows)</button>
+				</div>
+
+				<div class="ext-search-wrap">
+					<span class="ext-search-icon">🔍</span>
+					<input class="ext-search" id="ext-search" type="text" placeholder="Filter extensions..." oninput="filterExt(this.value)" />
+				</div>
+
+				<div class="ext-grid" id="ext-grid"></div>
+
+				<!-- CURSOR -->
+				<div style="margin-top: 4.5rem">
+					<div class="section-eye" style="margin-bottom: 0.75rem">Cursor IDE</div>
+					<h3 style="font-size: 1.35rem; font-weight: 700; margin-bottom: 0.6rem">Cursor Extensions</h3>
+					<p style="color: var(--text2); font-size: 0.875rem; line-height: 1.75; max-width: 520px">A curated list for the Cursor AI editor — optimised for AI-assisted development workflows.</p>
+					<div class="cursor-pills" id="cursor-pills"></div>
+				</div>
+			</div>
+		</section>
+
+		<div class="hr"></div>
+
+		<!-- KEYBINDINGS -->
+		<section id="keybindings" class="section" style="position: relative; overflow: hidden">
+			<div class="grid-bg"></div>
+			<div class="container" style="position: relative; z-index: 1">
+				<div class="section-eye">Keybindings</div>
+				<h2 class="section-h">Custom keyboard shortcuts</h2>
+				<p class="section-p">Mostly terminal-focused shortcuts that replace VS Code defaults with more ergonomic alternatives. Apply selectively or skip them — they're optional.</p>
+
+				<div style="margin-top: 2rem">
+					<div class="kb-tabs">
+						<button class="kb-tab on" onclick="switchKbView('table', this)">Table View</button>
+						<button class="kb-tab" onclick="switchKbView('raw', this)">Raw JSON</button>
+					</div>
+					<div class="kb-table-wrap" id="kb-table-wrap">
+						<table>
+							<thead
+								><tr><th>Key Combo</th><th>Action</th><th>Context</th></tr></thead
+							>
+							<tbody id="kb-tbody"></tbody>
+						</table>
+					</div>
+					<div class="kb-raw-wrap" id="kb-raw-wrap">
+						<div class="kb-raw-head">
+							<div class="shell-dots"><div class="sh-dot sh-r"></div><div class="sh-dot sh-y"></div><div class="sh-dot sh-g"></div></div>
+							<button class="copy-btn" onclick="copyFileByName('keybindings.json')">copy</button>
+						</div>
+						<div class="kb-raw-body"><pre id="kb-raw-pre"></pre></div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- FOOTER -->
+		<footer>
+			<div class="container">
+				<div class="foot-inner">
+					<div class="foot-logo">vscode<em>.</em>setup</div>
+					<div class="foot-links">
+						<a href="https://github.com/jamil-codes/Vscode-Setup" target="_blank">GitHub</a>
+						<a href="https://code.visualstudio.com/download" target="_blank">Download VSCode</a>
+						<a href="https://vercel.com/font" target="_blank">Geist Font</a>
+						<a href="#steps">Setup Guide</a>
+					</div>
+					<p class="foot-copy">Personal VS Code configuration by <strong style="color: var(--text)">@jamil-codes</strong> · MIT License</p>
+				</div>
+			</div>
+		</footer>
+
+		<!-- MODAL -->
+		<div class="modal-overlay" id="modal">
+			<div class="modal-box">
+				<div class="modal-head">
+					<span class="modal-fname" id="modal-fname">file</span>
+					<div class="modal-acts">
+						<button class="vbtn" onclick="copyCurrentFile()">⎘ Copy</button>
+						<a class="vbtn" id="modal-dl" href="#" download>↓ Download</a>
+						<button class="modal-close" onclick="closeModal()">✕</button>
+					</div>
+				</div>
+				<div class="modal-body"><pre id="modal-pre"></pre></div>
+			</div>
+		</div>
+
+		<div class="toast" id="toast"><span>✓</span><span id="toast-msg">Copied!</span></div>
+
+		<script>
+			// ── DATA ──────────────────────────────────────────────────────────────────
+			const FILES = {
+				"settings.json":
+					'{\n    // ==================== Version Info ====================\n    "settings.version": "3.0.0",\n    "settings.lastUpdated": "28-03-2026",\n    // ==================== Core Editor & Behavior ====================\n    "editor.formatOnSave": true,\n    "editor.formatOnPaste": true,\n    "editor.formatOnSaveMode": "file",\n    "notebook.formatOnSave.enabled": true,\n    "editor.padding.bottom": 350,\n    "editor.allowVariableFontsInAccessibilityMode": true,\n    "editor.autoIndentOnPaste": true,\n    "editor.padding.top": 16,\n    "editor.snippetSuggestions": "top",\n    "editor.detectIndentation": false,\n    "editor.guides.indentation": false,\n    "editor.linkedEditing": true,\n    "editor.renderWhitespace": "selection",\n    "editor.smoothScrolling": true,\n    "workbench.list.smoothScrolling": true,\n    "editor.wordSeparators": "`~!@#%^&*()=+[{]}\\\\|;:\'\\",.<>/?",\n    "editor.wordWrap": "on",\n    "editor.wordWrapColumn": 120,\n    "editor.fontWeight": "400",\n    "editor.fontSize": 14,\n    "editor.lineHeight": 32,\n    "editor.fontFamily": "Geist Mono, JetBrains Mono, Fira Code",\n    "editor.fontLigatures": "\'ss01\', \'ss02\', \'ss03\', \'ss04\', \'ss05\', \'ss06\', \'ss07\', \'ss08\', \'calt\', \'dlig\'",\n    "editor.cursorBlinking": "solid",\n    "editor.cursorSmoothCaretAnimation": "on",\n    "editor.mouseWheelZoom": true,\n    "editor.accessibilitySupport": "off",\n    "editor.stickyScroll.enabled": false,\n    "editor.minimap.enabled": false,\n    "editor.minimap.maxColumn": 250,\n    "editor.occurrencesHighlight": "off",\n    "editor.selectionHighlight": false,\n    "editor.matchBrackets": "never",\n    "editor.renderLineHighlight": "none",\n    "editor.renderControlCharacters": false,\n    "editor.hideCursorInOverviewRuler": true,\n    "editor.overviewRulerBorder": false,\n    "editor.lightbulb.enabled": "off",\n    "editor.hover.enabled": "on",\n    "editor.hover.delay": 500,\n    "editor.inlineSuggest.suppressSuggestions": true,\n    "editor.quickSuggestions": {\n        "strings": true\n    },\n    "editor.suggest.insertMode": "replace",\n    "editor.suggestFontSize": 16,\n    "editor.suggestLineHeight": 30,\n    "editor.tabCompletion": "onlySnippets",\n    "editor.defaultFormatter": "esbenp.prettier-vscode",\n    "editor.codeActionsOnSave": {\n        "source.organizeImports": "never"\n    },\n    "editor.gotoLocation.multipleReferences": "goto",\n    "editor.gotoLocation.multipleDefinitions": "goto",\n    "editor.gotoLocation.multipleDeclarations": "goto",\n    "editor.gotoLocation.multipleImplementations": "goto",\n    "editor.gotoLocation.multipleTypeDefinitions": "goto",\n    "editor.find.addExtraSpaceOnTop": false,\n    "editor.scrollBeyondLastLine": false,\n    // ==================== Diff / Merge Editor ====================\n    "diffEditor.ignoreTrimWhitespace": false,\n    "diffEditor.renderSideBySide": false,\n    "diffEditor.wordWrap": "on",\n    // ==================== Notebook ====================\n    "notebook.output.wordWrap": true,\n    "notebook.defaultFormatter": "esbenp.prettier-vscode",\n    // ==================== Files & Workspace ====================\n    "files.trimTrailingWhitespace": true,\n    "files.insertFinalNewline": true,\n    "files.trimFinalNewlines": true,\n    "files.autoSave": "afterDelay",\n    "files.autoSaveDelay": 100,\n    "files.associations": {\n        ".php_cs": "php",\n        ".php_cs.dist": "php",\n        "*.css": "css"\n    },\n    "files.exclude": {\n        "**/.git": true,\n        "**/.svn": true,\n        "**/.hg": true,\n        "**/CVS": true,\n        "**/.DS_Store": true,\n        "**/Thumbs.db": true\n    },\n    "files.watcherExclude": {\n        "**/.git/objects/**": true,\n        "**/.git/subtree-cache/**": true,\n        "**/node_modules/**": true,\n        "**/vendor/**": true,\n        "**/storage/**": true\n    },\n    "security.workspace.trust.untrustedFiles": "open",\n    // ==================== Search ====================\n    "search.useIgnoreFiles": false,\n    "search.smartCase": true,\n    "search.exclude": {\n        // Hide everything in /vendor, except the "laravel" and "livewire" folder.\n        "**/vendor/{[^l],?[^ai]}*": true,\n        // Hide everything in /public, except "index.php"\n        "**/public/{[^i],?[^n]}*": true,\n        "**/node_modules": true,\n        "**/dist": true,\n        "**/_ide_helper.php": true,\n        "**/composer.lock": true,\n        "**/package-lock.json": true,\n        "storage": true,\n        ".phpunit.result.cache": true\n    },\n    // ==================== Workbench UI ====================\n    "workbench.activityBar.location": "hidden",\n    "workbench.statusBar.visible": false,\n    "workbench.sideBar.location": "right",\n    "workbench.secondarySideBar.defaultVisibility": "hidden",\n    "workbench.tips.enabled": false,\n    "workbench.startupEditor": "none",\n    "workbench.tree.enableStickyScroll": false,\n    "workbench.tree.indent": 15,\n    "workbench.navigationControl.enabled": false,\n    "workbench.editor.enablePreview": false,\n    "workbench.editor.enablePreviewFromQuickOpen": false,\n    "workbench.editor.empty.hint": "hidden",\n    "workbench.editorAssociations": {\n        "*.svg": "default"\n    },\n    "workbench.colorTheme": "React Theme",\n    "workbench.preferredLightColorTheme": "React Theme",\n    "workbench.iconTheme": "material-icon-theme",\n    "window.newWindowDimensions": "inherit",\n    "window.commandCenter": false,\n    "window.menuBarVisibility": "compact",\n    "window.systemColorTheme": "dark",\n    "breadcrumbs.enabled": false,\n    // ==================== Explorer ====================\n    "explorer.confirmDelete": false,\n    "explorer.confirmDragAndDrop": false,\n    "explorer.sortOrder": "type",\n    "explorer.compactFolders": false,\n    // ==================== Terminal ====================\n    "terminal.integrated.lineHeight": 1.5,\n    "terminal.integrated.fontSize": 16,\n    "terminal.integrated.defaultProfile.windows": "PowerShell",\n    "terminal.integrated.enableMultiLinePasteWarning": "never",\n    // ==================== Git & Version Control ====================\n    "git.decorations.enabled": false,\n    "git.enableSmartCommit": true,\n    "git.autofetch": true,\n    "git.openRepositoryInParentFolders": "always",\n    "git.confirmSync": false,\n    "git.autorefresh": true,\n    "scm.diffDecorations": "none",\n    // ==================== Auto Close / Rename Tag ====================\n    "auto-close-tag.activationOnLanguage": [\n        "xml",\n        "php",\n        "blade",\n        "html",\n        "javascript",\n        "javascriptreact",\n        "typescript",\n        "typescriptreact"\n    ],\n    "auto-close-tag.enableAutoCloseTag": true,\n    "auto-rename-tag.activationOnLanguage": [\n        "xml",\n        "php",\n        "blade",\n        "html",\n        "javascriptreact",\n        "typescriptreact"\n    ],\n    "auto-rename-tag.includeAutoRenameTags": true,\n    // ==================== Problems & Decorations ====================\n    "problems.decorations.enabled": false,\n    // ==================== Error Lens ====================\n    "errorLens.enabled": true,\n    "errorLens.fontStyleItalic": true,\n    "errorLens.fontWeight": "400",\n    "errorLens.errorColor": "rgba(255,80,80,0.3)",\n    "errorLens.warningColor": "rgba(255,200,100,0.3)",\n    "errorLens.infoColor": "rgba(100,150,255,0.3)",\n    "errorLens.hintColor": "rgba(150,150,150,0.3)",\n    "errorLens.gutterIconsEnabled": true,\n    "errorLens.statusBarMessageEnabled": true,\n    "errorLens.messageBackground": false,\n    // ==================== Language Specific ====================\n    "[jsonc]": {\n        "editor.defaultFormatter": "vscode.json-language-features"\n    },\n    "[json]": {\n        "editor.defaultFormatter": "vscode.json-language-features"\n    },\n    "[typescript]": {\n        "editor.defaultFormatter": "vscode.typescript-language-features"\n    },\n    "[javascript]": {\n        "editor.defaultFormatter": "vscode.typescript-language-features"\n    },\n    "[javascriptreact]": {\n        "editor.defaultFormatter": "esbenp.prettier-vscode"\n    },\n    "[typescriptreact]": {\n        "editor.defaultFormatter": "esbenp.prettier-vscode"\n    },\n    "[html]": {\n        "editor.defaultFormatter": "vscode.html-language-features"\n    },\n    "[css]": {\n        "editor.defaultFormatter": "vscode.css-language-features"\n    },\n    "[markdown]": {\n        "editor.defaultFormatter": "yzhang.markdown-all-in-one"\n    },\n    "[django-html]": {\n        "editor.defaultFormatter": "junstyle.vscode-django-support",\n        "editor.quickSuggestions": {\n            "comments": true,\n            "other": true,\n            "strings": true\n        },\n        "editor.tabSize": 4,\n        "editor.wordWrap": "on"\n    },\n    "[python]": {\n        "editor.defaultFormatter": "ms-python.black-formatter"\n    },\n    // ==================== Python ====================\n    "python.defaultInterpreterPath": "/bin/python3",\n    "python.analysis.inlayHints.callArgumentNames": "all",\n    "python.analysis.inlayHints.functionReturnTypes": true,\n    "python.formatting.provider": "black",\n    "black-formatter.args": [\n        "--line-length",\n        "1000"\n    ],\n    "black-formatter.importStrategy": "fromEnvironment",\n    "black-formatter.path": [\n        "black"\n    ],\n    // ==================== TypeScript / JavaScript ====================\n    "js/ts.inlayHints.enumMemberValues.enabled": true,\n    "js/ts.inlayHints.parameterTypes.enabled": true,\n    "js/ts.updateImportsOnFileMove.enabled": "always",\n    "php.suggest.basic": false,\n    // ==================== Emmet ====================\n    "emmet.includeLanguages": {\n        "django-html": "html",\n        "jinja-html": "html",\n        "blade": "html",\n        "vue-html": "html",\n        "vue": "html",\n        "react": "html",\n        "javascript": "html"\n    },\n    "emmet.preferences": {},\n    "emmet.triggerExpansionOnTab": true,\n    // ==================== Prettier ====================\n    "prettier.printWidth": 556,\n    "prettier.bracketSameLine": true,\n    "prettier.experimentalTernaries": true,\n    "prettier.singleAttributePerLine": false,\n    "prettier.useTabs": true,\n    "prettier.htmlWhitespaceSensitivity": "strict",\n    "prettier.tabWidth": 4,\n    "prettier.useEditorConfig": false,\n    // ==================== HTML / CSS / Tailwind ====================\n    "html.format.wrapAttributes": "preserve-aligned",\n    "css.lint.unknownAtRules": "ignore",\n    "less.lint.unknownAtRules": "ignore",\n    "scss.lint.unknownAtRules": "ignore",\n    "tailwindCSS.experimental.configFile": null,\n    "tailwindCSS.includeLanguages": {\n        "html": "html",\n        "javascript": "javascript",\n        "css": "css"\n    },\n    "tailwindCSS.emmetCompletions": true,\n    // ==================== Color Highlight ====================\n    "color-highlight.markerType": "background",\n    "color-highlight.languages": [\n        "css",\n        "scss",\n        "less",\n        "stylus",\n        "javascript",\n        "typescript",\n        "javascriptreact",\n        "typescriptreact",\n        "html",\n        "vue",\n        "blade"\n    ],\n    "color-highlight.matchWords": false,\n    // ==================== Headwind (Tailwind CSS class sorter) ====================\n    "headwind.removeDuplicates": false,\n    "headwind.runOnSave": false,\n    "headwind.prependCustomClasses": true,\n    "headwind.defaultSortOrder": [\n        "container",\n        "box-border",\n        "box-content",\n        "static",\n        "fixed",\n        "absolute",\n        "relative",\n        "sticky",\n        "inset-0",\n        "inset-x-0",\n        "inset-y-0",\n        "inset-x-auto",\n        "inset-y-auto",\n        "inset-auto",\n        "top-0",\n        "bottom-0",\n        "left-0",\n        "right-0",\n        "top-auto",\n        "bottom-auto",\n        "left-auto",\n        "right-auto",\n        "z-0",\n        "z-10",\n        "z-20",\n        "z-30",\n        "z-40",\n        "z-50",\n        "z-auto",\n        "flex",\n        "inline-flex",\n        "grid",\n        "inline-grid",\n        "table-caption",\n        "table-column",\n        "table-column-group",\n        "table-footer-group",\n        "table-header-group",\n        "table-row-group",\n        "flex-row",\n        "flex-row-reverse",\n        "flex-col",\n        "flex-col-reverse",\n        "flex-no-wrap",\n        "flex-wrap",\n        "flex-wrap-reverse",\n        "items-stretch",\n        "items-start",\n        "items-center",\n        "items-end",\n        "items-baseline",\n        "content-start",\n        "content-center",\n        "content-end",\n        "content-between",\n        "content-around",\n        "self-auto",\n        "self-start",\n        "self-center",\n        "self-end",\n        "self-stretch",\n        "justify-start",\n        "justify-center",\n        "justify-end",\n        "justify-between",\n        "justify-around",\n        "flex-1",\n        "flex-auto",\n        "flex-initial",\n        "flex-none",\n        "flex-grow",\n        "flex-grow-0",\n        "flex-shrink",\n        "flex-shrink-0",\n        "order-first",\n        "order-last",\n        "order-none",\n        "order-1",\n        "order-2",\n        "order-3",\n        "order-4",\n        "order-5",\n        "order-6",\n        "order-7",\n        "order-8",\n        "order-9",\n        "order-10",\n        "order-11",\n        "order-12",\n        "visible",\n        "invisible",\n        "hidden",\n        "block",\n        "flow-root",\n        "inline-block",\n        "inline",\n        "table",\n        "table-row",\n        "table-cell",\n        "clearfix",\n        "float-left",\n        "float-right",\n        "float-none",\n        "clear-right",\n        "clear-both",\n        "clear-none",\n        "object-contain",\n        "object-cover",\n        "object-fill",\n        "object-none",\n        "object-scale-down",\n        "object-bottom",\n        "object-center",\n        "object-left",\n        "object-left-bottom",\n        "object-left-top",\n        "object-right",\n        "object-right-bottom",\n        "object-right-top",\n        "object-top",\n        "w-0",\n        "w-1",\n        "w-2",\n        "w-3",\n        "w-4",\n        "w-5",\n        "w-6",\n        "w-8",\n        "w-10",\n        "w-12",\n        "w-16",\n        "w-20",\n        "w-24",\n        "w-32",\n        "w-40",\n        "w-48",\n        "w-56",\n        "w-64",\n        "w-auto",\n        "w-px",\n        "w-1/2",\n        "w-1/3",\n        "w-2/3",\n        "w-1/4",\n        "w-2/4",\n        "w-3/4",\n        "w-1/5",\n        "w-2/5",\n        "w-3/5",\n        "w-4/5",\n        "w-1/6",\n        "w-2/6",\n        "w-3/6",\n        "w-4/6",\n        "w-5/6",\n        "w-1/12",\n        "w-2/12",\n        "w-3/12",\n        "w-4/12",\n        "w-5/12",\n        "w-6/12",\n        "w-7/12",\n        "w-8/12",\n        "w-9/12",\n        "w-10/12",\n        "w-11/12",\n        "w-full",\n        "w-screen",\n        "h-0",\n        "h-1",\n        "h-2",\n        "h-3",\n        "h-4",\n        "h-5",\n        "h-6",\n        "h-8",\n        "h-10",\n        "h-12",\n        "h-16",\n        "h-20",\n        "h-24",\n        "h-32",\n        "h-40",\n        "h-48",\n        "h-56",\n        "h-64",\n        "h-auto",\n        "h-px",\n        "h-full",\n        "h-screen",\n        "max-w-xs",\n        "max-w-sm",\n        "max-w-md",\n        "max-w-lg",\n        "max-w-xl",\n        "max-w-2xl",\n        "max-w-3xl",\n        "max-w-4xl",\n        "max-w-5xl",\n        "max-w-6xl",\n        "max-w-full",\n        "max-w-screen-sm",\n        "max-w-screen-md",\n        "max-w-screen-lg",\n        "max-w-screen-xl",\n        "max-h-full",\n        "max-h-screen",\n        "min-w-0",\n        "min-w-full",\n        "min-h-0",\n        "min-h-full",\n        "min-h-screen",\n        "grid-flow-row",\n        "grid-flow-col",\n        "grid-flow-row-dense",\n        "grid-flow-col-dense",\n        "grid-cols-1",\n        "grid-cols-2",\n        "grid-cols-3",\n        "grid-cols-4",\n        "grid-cols-5",\n        "grid-cols-6",\n        "grid-cols-7",\n        "grid-cols-8",\n        "grid-cols-9",\n        "grid-cols-10",\n        "grid-cols-11",\n        "grid-cols-12",\n        "grid-cols-none",\n        "col-auto",\n        "col-span-1",\n        "col-span-2",\n        "col-span-3",\n        "col-span-4",\n        "col-span-5",\n        "col-span-6",\n        "col-span-7",\n        "col-span-8",\n        "col-span-9",\n        "col-span-10",\n        "col-span-11",\n        "col-span-12",\n        "col-start-1",\n        "col-start-2",\n        "col-start-3",\n        "col-start-4",\n        "col-start-5",\n        "col-start-6",\n        "col-start-7",\n        "col-start-8",\n        "col-start-9",\n        "col-start-10",\n        "col-start-11",\n        "col-start-12",\n        "col-start-13",\n        "col-start-auto",\n        "col-end-1",\n        "col-end-2",\n        "col-end-3",\n        "col-end-4",\n        "col-end-5",\n        "col-end-6",\n        "col-end-7",\n        "col-end-8",\n        "col-end-9",\n        "col-end-10",\n        "col-end-11",\n        "col-end-12",\n        "col-end-13",\n        "col-end-auto",\n        "grid-rows-1",\n        "grid-rows-2",\n        "grid-rows-3",\n        "grid-rows-4",\n        "grid-rows-5",\n        "grid-rows-6",\n        "grid-rows-none",\n        "row-auto",\n        "row-span-1",\n        "row-span-2",\n        "row-span-3",\n        "row-span-4",\n        "row-span-5",\n        "row-span-6",\n        "row-start-1",\n        "row-start-2",\n        "row-start-3",\n        "row-start-4",\n        "row-start-5",\n        "row-start-6",\n        "row-start-7",\n        "row-start-auto",\n        "row-end-1",\n        "row-end-2",\n        "row-end-3",\n        "row-end-4",\n        "row-end-5",\n        "row-end-6",\n        "row-end-7",\n        "row-end-auto",\n        "gap-0",\n        "gap-1",\n        "gap-2",\n        "gap-3",\n        "gap-4",\n        "gap-5",\n        "gap-6",\n        "gap-8",\n        "gap-10",\n        "gap-12",\n        "gap-16",\n        "gap-20",\n        "gap-24",\n        "gap-32",\n        "gap-40",\n        "gap-48",\n        "gap-56",\n        "gap-64",\n        "gap-px",\n        "row-gap-0",\n        "row-gap-1",\n        "row-gap-2",\n        "row-gap-3",\n        "row-gap-4",\n        "row-gap-5",\n        "row-gap-6",\n        "row-gap-8",\n        "row-gap-10",\n        "row-gap-12",\n        "row-gap-16",\n        "row-gap-20",\n        "row-gap-24",\n        "row-gap-32",\n        "row-gap-40",\n        "row-gap-48",\n        "row-gap-56",\n        "row-gap-64",\n        "row-gap-px",\n        "col-gap-0",\n        "col-gap-1",\n        "col-gap-2",\n        "col-gap-3",\n        "col-gap-4",\n        "col-gap-5",\n        "col-gap-6",\n        "col-gap-8",\n        "col-gap-10",\n        "col-gap-12",\n        "col-gap-16",\n        "col-gap-20",\n        "col-gap-24",\n        "col-gap-32",\n        "col-gap-40",\n        "col-gap-48",\n        "col-gap-56",\n        "col-gap-64",\n        "col-gap-px",\n        "p-0",\n        "p-1",\n        "p-2",\n        "p-3",\n        "p-4",\n        "p-5",\n        "p-6",\n        "p-8",\n        "p-10",\n        "p-12",\n        "p-16",\n        "p-20",\n        "p-24",\n        "p-32",\n        "p-40",\n        "p-48",\n        "p-56",\n        "p-64",\n        "p-px",\n        "px-0",\n        "px-1",\n        "px-2",\n        "px-3",\n        "px-4",\n        "px-5",\n        "px-6",\n        "px-8",\n        "px-10",\n        "px-12",\n        "px-16",\n        "px-20",\n        "px-24",\n        "px-32",\n        "px-40",\n        "px-48",\n        "px-56",\n        "px-64",\n        "px-px",\n        "py-0",\n        "py-1",\n        "py-2",\n        "py-3",\n        "py-4",\n        "py-5",\n        "py-6",\n        "py-8",\n        "py-10",\n        "py-12",\n        "py-16",\n        "py-20",\n        "py-24",\n        "py-32",\n        "py-40",\n        "py-48",\n        "py-56",\n        "py-64",\n        "py-px",\n        "pt-0",\n        "pt-1",\n        "pt-2",\n        "pt-3",\n        "pt-4",\n        "pt-5",\n        "pt-6",\n        "pt-8",\n        "pt-10",\n        "pt-12",\n        "pt-16",\n        "pt-20",\n        "pt-24",\n        "pt-32",\n        "pt-40",\n        "pt-48",\n        "pt-56",\n        "pt-64",\n        "pt-px",\n        "pb-0",\n        "pb-1",\n        "pb-2",\n        "pb-3",\n        "pb-4",\n        "pb-5",\n        "pb-6",\n        "pb-8",\n        "pb-10",\n        "pb-12",\n        "pb-16",\n        "pb-20",\n        "pb-24",\n        "pb-32",\n        "pb-40",\n        "pb-48",\n        "pb-56",\n        "pb-64",\n        "pb-px",\n        "pl-0",\n        "pl-1",\n        "pl-2",\n        "pl-3",\n        "pl-4",\n        "pl-5",\n        "pl-6",\n        "pl-8",\n        "pl-10",\n        "pl-12",\n        "pl-16",\n        "pl-20",\n        "pl-24",\n        "pl-32",\n        "pl-40",\n        "pl-48",\n        "pl-56",\n        "pl-64",\n        "pl-px",\n        "pr-0",\n        "pr-1",\n        "pr-2",\n        "pr-3",\n        "pr-4",\n        "pr-5",\n        "pr-6",\n        "pr-8",\n        "pr-10",\n        "pr-12",\n        "pr-16",\n        "pr-20",\n        "pr-24",\n        "pr-32",\n        "pr-40",\n        "pr-48",\n        "pr-56",\n        "pr-64",\n        "pr-px",\n        "m-0",\n        "m-1",\n        "m-2",\n        "m-3",\n        "m-4",\n        "m-5",\n        "m-6",\n        "m-8",\n        "m-10",\n        "m-12",\n        "m-16",\n        "m-20",\n        "m-24",\n        "m-32",\n        "m-40",\n        "m-48",\n        "m-56",\n        "m-64",\n        "m-auto",\n        "m-px",\n        "mx-0",\n        "mx-1",\n        "mx-2",\n        "mx-3",\n        "mx-4",\n        "mx-5",\n        "mx-6",\n        "mx-8",\n        "mx-10",\n        "mx-12",\n        "mx-16",\n        "mx-20",\n        "mx-24",\n        "mx-32",\n        "mx-40",\n        "mx-48",\n        "mx-56",\n        "mx-64",\n        "mx-auto",\n        "mx-px",\n        "my-0",\n        "my-1",\n        "my-2",\n        "my-3",\n        "my-4",\n        "my-5",\n        "my-6",\n        "my-8",\n        "my-10",\n        "my-12",\n        "my-16",\n        "my-20",\n        "my-24",\n        "my-32",\n        "my-40",\n        "my-48",\n        "my-56",\n        "my-64",\n        "my-auto",\n        "my-px",\n        "mt-0",\n        "mt-1",\n        "mt-2",\n        "mt-3",\n        "mt-4",\n        "mt-5",\n        "mt-6",\n        "mt-8",\n        "mt-10",\n        "mt-12",\n        "mt-16",\n        "mt-20",\n        "mt-24",\n        "mt-32",\n        "mt-40",\n        "mt-48",\n        "mt-56",\n        "mt-64",\n        "mt-auto",\n        "mt-px",\n        "mb-0",\n        "mb-1",\n        "mb-2",\n        "mb-3",\n        "mb-4",\n        "mb-5",\n        "mb-6",\n        "mb-8",\n        "mb-10",\n        "mb-12",\n        "mb-16",\n        "mb-20",\n        "mb-24",\n        "mb-32",\n        "mb-40",\n        "mb-48",\n        "mb-56",\n        "mb-64",\n        "mb-auto",\n        "mb-px",\n        "ml-0",\n        "ml-1",\n        "ml-2",\n        "ml-3",\n        "ml-4",\n        "ml-5",\n        "ml-6",\n        "ml-8",\n        "ml-10",\n        "ml-12",\n        "ml-16",\n        "ml-20",\n        "ml-24",\n        "ml-32",\n        "ml-40",\n        "ml-48",\n        "ml-56",\n        "ml-64",\n        "ml-auto",\n        "ml-px",\n        "mr-0",\n        "mr-1",\n        "mr-2",\n        "mr-3",\n        "mr-4",\n        "mr-5",\n        "mr-6",\n        "mr-8",\n        "mr-10",\n        "mr-12",\n        "mr-16",\n        "mr-20",\n        "mr-24",\n        "mr-32",\n        "mr-40",\n        "mr-48",\n        "mr-56",\n        "mr-64",\n        "mr-auto",\n        "mr-px",\n        "-m-0",\n        "-m-1",\n        "-m-2",\n        "-m-3",\n        "-m-4",\n        "-m-5",\n        "-m-6",\n        "-m-8",\n        "-m-10",\n        "-m-12",\n        "-m-16",\n        "-m-20",\n        "-m-24",\n        "-m-32",\n        "-m-40",\n        "-m-48",\n        "-m-56",\n        "-m-64",\n        "-m-px",\n        "-mx-0",\n        "-mx-1",\n        "-mx-2",\n        "-mx-3",\n        "-mx-4",\n        "-mx-5",\n        "-mx-6",\n        "-mx-8",\n        "-mx-10",\n        "-mx-12",\n        "-mx-16",\n        "-mx-20",\n        "-mx-24",\n        "-mx-32",\n        "-mx-40",\n        "-mx-48",\n        "-mx-56",\n        "-mx-64",\n        "-mx-px",\n        "-my-0",\n        "-my-1",\n        "-my-2",\n        "-my-3",\n        "-my-4",\n        "-my-5",\n        "-my-6",\n        "-my-8",\n        "-my-10",\n        "-my-12",\n        "-my-16",\n        "-my-20",\n        "-my-24",\n        "-my-32",\n        "-my-40",\n        "-my-48",\n        "-my-56",\n        "-my-64",\n        "-my-px",\n        "-mt-0",\n        "-mt-1",\n        "-mt-2",\n        "-mt-3",\n        "-mt-4",\n        "-mt-5",\n        "-mt-6",\n        "-mt-8",\n        "-mt-10",\n        "-mt-12",\n        "-mt-16",\n        "-mt-20",\n        "-mt-24",\n        "-mt-32",\n        "-mt-40",\n        "-mt-48",\n        "-mt-56",\n        "-mt-64",\n        "-mt-px",\n        "-mb-0",\n        "-mb-1",\n        "-mb-2",\n        "-mb-3",\n        "-mb-4",\n        "-mb-5",\n        "-mb-6",\n        "-mb-8",\n        "-mb-10",\n        "-mb-12",\n        "-mb-16",\n        "-mb-20",\n        "-mb-24",\n        "-mb-32",\n        "-mb-40",\n        "-mb-48",\n        "-mb-56",\n        "-mb-64",\n        "-mb-px",\n        "-ml-0",\n        "-ml-1",\n        "-ml-2",\n        "-ml-3",\n        "-ml-4",\n        "-ml-5",\n        "-ml-6",\n        "-ml-8",\n        "-ml-10",\n        "-ml-12",\n        "-ml-16",\n        "-ml-20",\n        "-ml-24",\n        "-ml-32",\n        "-ml-40",\n        "-ml-48",\n        "-ml-56",\n        "-ml-64",\n        "-ml-px",\n        "-mr-0",\n        "-mr-1",\n        "-mr-2",\n        "-mr-3",\n        "-mr-4",\n        "-mr-5",\n        "-mr-6",\n        "-mr-8",\n        "-mr-10",\n        "-mr-12",\n        "-mr-16",\n        "-mr-20",\n        "-mr-24",\n        "-mr-32",\n        "-mr-40",\n        "-mr-48",\n        "-mr-56",\n        "-mr-64",\n        "-mr-px",\n        "space-x-0",\n        "space-x-1",\n        "space-x-2",\n        "space-x-3",\n        "space-x-4",\n        "space-x-5",\n        "space-x-6",\n        "space-x-8",\n        "space-x-10",\n        "space-x-12",\n        "space-x-16",\n        "space-x-20",\n        "space-x-24",\n        "space-x-32",\n        "space-x-40",\n        "space-x-48",\n        "space-x-56",\n        "space-x-64",\n        "space-x-px",\n        "-space-x-1",\n        "-space-x-2",\n        "-space-x-3",\n        "-space-x-4",\n        "-space-x-5",\n        "-space-x-6",\n        "-space-x-8",\n        "-space-x-10",\n        "-space-x-12",\n        "-space-x-16",\n        "-space-x-20",\n        "-space-x-24",\n        "-space-x-32",\n        "-space-x-40",\n        "-space-x-48",\n        "-space-x-56",\n        "-space-x-64",\n        "-space-x-px",\n        "space-y-0",\n        "space-y-1",\n        "space-y-2",\n        "space-y-3",\n        "space-y-4",\n        "space-y-5",\n        "space-y-6",\n        "space-y-8",\n        "space-y-10",\n        "space-y-12",\n        "space-y-16",\n        "space-y-20",\n        "space-y-24",\n        "space-y-32",\n        "space-y-40",\n        "space-y-48",\n        "space-y-56",\n        "space-y-64",\n        "space-y-px",\n        "-space-y-1",\n        "-space-y-2",\n        "-space-y-3",\n        "-space-y-4",\n        "-space-y-5",\n        "-space-y-6",\n        "-space-y-8",\n        "-space-y-10",\n        "-space-y-12",\n        "-space-y-16",\n        "-space-y-20",\n        "-space-y-24",\n        "-space-y-32",\n        "-space-y-40",\n        "-space-y-48",\n        "-space-y-56",\n        "-space-y-64",\n        "-space-y-px",\n        "space-x-reverse",\n        "space-y-reverse",\n        "overflow-auto",\n        "overflow-hidden",\n        "overflow-visible",\n        "overflow-scroll",\n        "overflow-x-auto",\n        "overflow-x-hidden",\n        "overflow-x-visible",\n        "overflow-x-scroll",\n        "overflow-y-auto",\n        "overflow-y-hidden",\n        "overflow-y-visible",\n        "overflow-y-scroll",\n        "scrolling-touch",\n        "scrolling-auto",\n        "font-sans",\n        "font-serif",\n        "font-mono",\n        "text-xs",\n        "text-sm",\n        "text-base",\n        "text-lg",\n        "text-xl",\n        "text-2xl",\n        "text-3xl",\n        "text-4xl",\n        "text-5xl",\n        "text-6xl",\n        "antialiased",\n        "subpixel-antialiased",\n        "italic",\n        "not-italic",\n        "font-hairline",\n        "font-thin",\n        "font-light",\n        "font-normal",\n        "font-medium",\n        "font-semibold",\n        "font-bold",\n        "font-extrabold",\n        "font-black",\n        "leading-none",\n        "leading-tight",\n        "leading-snug",\n        "leading-normal",\n        "leading-relaxed",\n        "leading-loose",\n        "leading-3",\n        "leading-4",\n        "leading-5",\n        "leading-6",\n        "leading-7",\n        "leading-8",\n        "leading-9",\n        "leading-10",\n        "tracking-tighter",\n        "tracking-tight",\n        "tracking-normal",\n        "tracking-wide",\n        "tracking-wider",\n        "tracking-widest",\n        "prose-sm",\n        "prose",\n        "prose-lg",\n        "prose-xl",\n        "prose-2xl",\n        "text-left",\n        "text-center",\n        "text-right",\n        "text-justify",\n        "text-transparent",\n        "text-current",\n        "text-black",\n        "text-white",\n        "text-gray-100",\n        "text-gray-200",\n        "text-gray-300",\n        "text-gray-400",\n        "text-gray-500",\n        "text-gray-600",\n        "text-gray-700",\n        "text-gray-800",\n        "text-gray-900",\n        "text-red-100",\n        "text-red-200",\n        "text-red-300",\n        "text-red-400",\n        "text-red-500",\n        "text-red-600",\n        "text-red-700",\n        "text-red-800",\n        "text-red-900",\n        "text-orange-100",\n        "text-orange-200",\n        "text-orange-300",\n        "text-orange-400",\n        "text-orange-500",\n        "text-orange-600",\n        "text-orange-700",\n        "text-orange-800",\n        "text-orange-900",\n        "text-yellow-100",\n        "text-yellow-200",\n        "text-yellow-300",\n        "text-yellow-400",\n        "text-yellow-500",\n        "text-yellow-600",\n        "text-yellow-700",\n        "text-yellow-800",\n        "text-yellow-900",\n        "text-green-100",\n        "text-green-200",\n        "text-green-300",\n        "text-green-400",\n        "text-green-500",\n        "text-green-600",\n        "text-green-700",\n        "text-green-800",\n        "text-green-900",\n        "text-teal-100",\n        "text-teal-200",\n        "text-teal-300",\n        "text-teal-400",\n        "text-teal-500",\n        "text-teal-600",\n        "text-teal-700",\n        "text-teal-800",\n        "text-teal-900",\n        "text-blue-100",\n        "text-blue-200",\n        "text-blue-300",\n        "text-blue-400",\n        "text-blue-500",\n        "text-blue-600",\n        "text-blue-700",\n        "text-blue-800",\n        "text-blue-900",\n        "text-indigo-100",\n        "text-indigo-200",\n        "text-indigo-300",\n        "text-indigo-400",\n        "text-indigo-500",\n        "text-indigo-600",\n        "text-indigo-700",\n        "text-indigo-800",\n        "text-indigo-900",\n        "text-purple-100",\n        "text-purple-200",\n        "text-purple-300",\n        "text-purple-400",\n        "text-purple-500",\n        "text-purple-600",\n        "text-purple-700",\n        "text-purple-800",\n        "text-purple-900",\n        "text-pink-100",\n        "text-pink-200",\n        "text-pink-300",\n        "text-pink-400",\n        "text-pink-500",\n        "text-pink-600",\n        "text-pink-700",\n        "text-pink-800",\n        "text-pink-900",\n        "text-opacity-0",\n        "text-opacity-25",\n        "text-opacity-50",\n        "text-opacity-75",\n        "text-opacity-100",\n        "placeholder-transparent",\n        "placeholder-current",\n        "placeholder-black",\n        "placeholder-white",\n        "placeholder-gray-100",\n        "placeholder-gray-200",\n        "placeholder-gray-300",\n        "placeholder-gray-400",\n        "placeholder-gray-500",\n        "placeholder-gray-600",\n        "placeholder-gray-700",\n        "placeholder-gray-800",\n        "placeholder-gray-900",\n        "placeholder-red-100",\n        "placeholder-red-200",\n        "placeholder-red-300",\n        "placeholder-red-400",\n        "placeholder-red-500",\n        "placeholder-red-600",\n        "placeholder-red-700",\n        "placeholder-red-800",\n        "placeholder-red-900",\n        "placeholder-orange-100",\n        "placeholder-orange-200",\n        "placeholder-orange-300",\n        "placeholder-orange-400",\n        "placeholder-orange-500",\n        "placeholder-orange-600",\n        "placeholder-orange-700",\n        "placeholder-orange-800",\n        "placeholder-orange-900",\n        "placeholder-yellow-100",\n        "placeholder-yellow-200",\n        "placeholder-yellow-300",\n        "placeholder-yellow-400",\n        "placeholder-yellow-500",\n        "placeholder-yellow-600",\n        "placeholder-yellow-700",\n        "placeholder-yellow-800",\n        "placeholder-yellow-900",\n        "placeholder-green-100",\n        "placeholder-green-200",\n        "placeholder-green-300",\n        "placeholder-green-400",\n        "placeholder-green-500",\n        "placeholder-green-600",\n        "placeholder-green-700",\n        "placeholder-green-800",\n        "placeholder-green-900",\n        "placeholder-teal-100",\n        "placeholder-teal-200",\n        "placeholder-teal-300",\n        "placeholder-teal-400",\n        "placeholder-teal-500",\n        "placeholder-teal-600",\n        "placeholder-teal-700",\n        "placeholder-teal-800",\n        "placeholder-teal-900",\n        "placeholder-blue-100",\n        "placeholder-blue-200",\n        "placeholder-blue-300",\n        "placeholder-blue-400",\n        "placeholder-blue-500",\n        "placeholder-blue-600",\n        "placeholder-blue-700",\n        "placeholder-blue-800",\n        "placeholder-blue-900",\n        "placeholder-indigo-100",\n        "placeholder-indigo-200",\n        "placeholder-indigo-300",\n        "placeholder-indigo-400",\n        "placeholder-indigo-500",\n        "placeholder-indigo-600",\n        "placeholder-indigo-700",\n        "placeholder-indigo-800",\n        "placeholder-indigo-900",\n        "placeholder-purple-100",\n        "placeholder-purple-200",\n        "placeholder-purple-300",\n        "placeholder-purple-400",\n        "placeholder-purple-500",\n        "placeholder-purple-600",\n        "placeholder-purple-700",\n        "placeholder-purple-800",\n        "placeholder-purple-900",\n        "placeholder-pink-100",\n        "placeholder-pink-200",\n        "placeholder-pink-300",\n        "placeholder-pink-400",\n        "placeholder-pink-500",\n        "placeholder-pink-600",\n        "placeholder-pink-700",\n        "placeholder-pink-800",\n        "placeholder-pink-900",\n        "placeholder-opacity-0",\n        "placeholder-opacity-25",\n        "placeholder-opacity-50",\n        "placeholder-opacity-75",\n        "placeholder-opacity-100",\n        "placeholder-left",\n        "placeholder-center",\n        "placeholder-right",\n        "placeholder-justify",\n        "underline",\n        "line-through",\n        "no-underline",\n        "uppercase",\n        "lowercase",\n        "capitalize",\n        "normal-case",\n        "break-normal",\n        "break-words",\n        "break-all",\n        "truncate",\n        "whitespace-normal",\n        "whitespace-no-wrap",\n        "whitespace-pre",\n        "whitespace-pre-line",\n        "whitespace-pre-wrap",\n        "align-baseline",\n        "align-top",\n        "align-middle",\n        "align-bottom",\n        "align-text-top",\n        "align-text-bottom",\n        "list-none",\n        "list-disc",\n        "list-decimal",\n        "list-inside",\n        "list-outside",\n        "transition-none",\n        "transition-all",\n        "transition",\n        "transition-colors",\n        "transition-opacity",\n        "transition-shadow",\n        "transition-transform",\n        "duration-75",\n        "duration-100",\n        "duration-150",\n        "duration-200",\n        "duration-300",\n        "duration-500",\n        "duration-700",\n        "duration-1000",\n        "ease-linear",\n        "ease-in",\n        "ease-out",\n        "ease-in-out",\n        "delay-75",\n        "delay-100",\n        "delay-150",\n        "delay-200",\n        "delay-300",\n        "delay-500",\n        "delay-700",\n        "delay-1000",\n        "origin-center",\n        "origin-top",\n        "origin-top-right",\n        "origin-right",\n        "origin-bottom-right",\n        "origin-bottom",\n        "origin-bottom-left",\n        "origin-left",\n        "origin-top-left",\n        "transform",\n        "scale-0",\n        "scale-50",\n        "scale-75",\n        "scale-90",\n        "scale-95",\n        "scale-100",\n        "scale-105",\n        "scale-110",\n        "scale-125",\n        "scale-150",\n        "scale-x-0",\n        "scale-x-50",\n        "scale-x-75",\n        "scale-x-90",\n        "scale-x-95",\n        "scale-x-100",\n        "scale-x-105",\n        "scale-x-110",\n        "scale-x-125",\n        "scale-x-150",\n        "scale-y-0",\n        "scale-y-50",\n        "scale-y-75",\n        "scale-y-90",\n        "scale-y-95",\n        "scale-y-100",\n        "scale-y-105",\n        "scale-y-110",\n        "scale-y-125",\n        "scale-y-150",\n        "rotate-0",\n        "rotate-45",\n        "rotate-90",\n        "rotate-180",\n        "-rotate-180",\n        "-rotate-90",\n        "-rotate-45",\n        "translate-x-0",\n        "translate-x-1",\n        "translate-x-2",\n        "translate-x-3",\n        "translate-x-4",\n        "translate-x-5",\n        "translate-x-6",\n        "translate-x-8",\n        "translate-x-10",\n        "translate-x-12",\n        "translate-x-16",\n        "translate-x-20",\n        "translate-x-24",\n        "translate-x-32",\n        "translate-x-40",\n        "translate-x-48",\n        "translate-x-56",\n        "translate-x-64",\n        "translate-x-px",\n        "-translate-x-1",\n        "-translate-x-2",\n        "-translate-x-3",\n        "-translate-x-4",\n        "-translate-x-5",\n        "-translate-x-6",\n        "-translate-x-8",\n        "-translate-x-10",\n        "-translate-x-12",\n        "-translate-x-16",\n        "-translate-x-20",\n        "-translate-x-24",\n        "-translate-x-32",\n        "-translate-x-40",\n        "-translate-x-48",\n        "-translate-x-56",\n        "-translate-x-64",\n        "-translate-x-px",\n        "-translate-x-full",\n        "-translate-x-1/2",\n        "translate-x-1/2",\n        "translate-x-full",\n        "translate-y-0",\n        "translate-y-1",\n        "translate-y-2",\n        "translate-y-3",\n        "translate-y-4",\n        "translate-y-5",\n        "translate-y-6",\n        "translate-y-8",\n        "translate-y-10",\n        "translate-y-12",\n        "translate-y-16",\n        "translate-y-20",\n        "translate-y-24",\n        "translate-y-32",\n        "translate-y-40",\n        "translate-y-48",\n        "translate-y-56",\n        "translate-y-64",\n        "translate-y-px",\n        "-translate-y-1",\n        "-translate-y-2",\n        "-translate-y-3",\n        "-translate-y-4",\n        "-translate-y-5",\n        "-translate-y-6",\n        "-translate-y-8",\n        "-translate-y-10",\n        "-translate-y-12",\n        "-translate-y-16",\n        "-translate-y-20",\n        "-translate-y-24",\n        "-translate-y-32",\n        "-translate-y-40",\n        "-translate-y-48",\n        "-translate-y-56",\n        "-translate-y-64",\n        "-translate-y-px",\n        "-translate-y-full",\n        "-translate-y-1/2",\n        "translate-y-1/2",\n        "translate-y-full",\n        "skew-x-0",\n        "skew-x-3",\n        "skew-x-6",\n        "skew-x-12",\n        "-skew-x-12",\n        "-skew-x-6",\n        "-skew-x-3",\n        "skew-y-0",\n        "skew-y-3",\n        "skew-y-6",\n        "skew-y-12",\n        "-skew-y-12",\n        "-skew-y-6",\n        "-skew-y-3",\n        "bg-fixed",\n        "bg-local",\n        "bg-scroll",\n        "bg-transparent",\n        "bg-current",\n        "bg-black",\n        "bg-white",\n        "bg-gray-100",\n        "bg-gray-200",\n        "bg-gray-300",\n        "bg-gray-400",\n        "bg-gray-500",\n        "bg-gray-600",\n        "bg-gray-700",\n        "bg-gray-800",\n        "bg-gray-900",\n        "bg-red-100",\n        "bg-red-200",\n        "bg-red-300",\n        "bg-red-400",\n        "bg-red-500",\n        "bg-red-600",\n        "bg-red-700",\n        "bg-red-800",\n        "bg-red-900",\n        "bg-orange-100",\n        "bg-orange-200",\n        "bg-orange-300",\n        "bg-orange-400",\n        "bg-orange-500",\n        "bg-orange-600",\n        "bg-orange-700",\n        "bg-orange-800",\n        "bg-orange-900",\n        "bg-yellow-100",\n        "bg-yellow-200",\n        "bg-yellow-300",\n        "bg-yellow-400",\n        "bg-yellow-500",\n        "bg-yellow-600",\n        "bg-yellow-700",\n        "bg-yellow-800",\n        "bg-yellow-900",\n        "bg-green-100",\n        "bg-green-200",\n        "bg-green-300",\n        "bg-green-400",\n        "bg-green-500",\n        "bg-green-600",\n        "bg-green-700",\n        "bg-green-800",\n        "bg-green-900",\n        "bg-teal-100",\n        "bg-teal-200",\n        "bg-teal-300",\n        "bg-teal-400",\n        "bg-teal-500",\n        "bg-teal-600",\n        "bg-teal-700",\n        "bg-teal-800",\n        "bg-teal-900",\n        "bg-blue-100",\n        "bg-blue-200",\n        "bg-blue-300",\n        "bg-blue-400",\n        "bg-blue-500",\n        "bg-blue-600",\n        "bg-blue-700",\n        "bg-blue-800",\n        "bg-blue-900",\n        "bg-indigo-100",\n        "bg-indigo-200",\n        "bg-indigo-300",\n        "bg-indigo-400",\n        "bg-indigo-500",\n        "bg-indigo-600",\n        "bg-indigo-700",\n        "bg-indigo-800",\n        "bg-indigo-900",\n        "bg-purple-100",\n        "bg-purple-200",\n        "bg-purple-300",\n        "bg-purple-400",\n        "bg-purple-500",\n        "bg-purple-600",\n        "bg-purple-700",\n        "bg-purple-800",\n        "bg-purple-900",\n        "bg-pink-100",\n        "bg-pink-200",\n        "bg-pink-300",\n        "bg-pink-400",\n        "bg-pink-500",\n        "bg-pink-600",\n        "bg-pink-700",\n        "bg-pink-800",\n        "bg-pink-900",\n        "bg-opacity-0",\n        "bg-opacity-25",\n        "bg-opacity-50",\n        "bg-opacity-75",\n        "bg-opacity-100",\n        "bg-bottom",\n        "bg-center",\n        "bg-left",\n        "bg-left-bottom",\n        "bg-left-top",\n        "bg-right",\n        "bg-right-bottom",\n        "bg-right-top",\n        "bg-top",\n        "bg-repeat",\n        "bg-no-repeat",\n        "bg-repeat-x",\n        "bg-repeat-y",\n        "bg-repeat-round",\n        "bg-repeat-space",\n        "bg-auto",\n        "bg-cover",\n        "bg-contain",\n        "border",\n        "border-0",\n        "border-2",\n        "border-4",\n        "border-8",\n        "border-t",\n        "border-t-0",\n        "border-t-2",\n        "border-t-4",\n        "border-t-8",\n        "border-b",\n        "border-b-0",\n        "border-b-2",\n        "border-b-4",\n        "border-b-8",\n        "border-l",\n        "border-l-0",\n        "border-l-2",\n        "border-l-4",\n        "border-l-8",\n        "border-r",\n        "border-r-0",\n        "border-r-2",\n        "border-r-4",\n        "border-r-8",\n        "border-collapse",\n        "border-separate",\n        "border-transparent",\n        "border-current",\n        "border-black",\n        "border-white",\n        "border-gray-100",\n        "border-gray-200",\n        "border-gray-300",\n        "border-gray-400",\n        "border-gray-500",\n        "border-gray-600",\n        "border-gray-700",\n        "border-gray-800",\n        "border-gray-900",\n        "border-red-100",\n        "border-red-200",\n        "border-red-300",\n        "border-red-400",\n        "border-red-500",\n        "border-red-600",\n        "border-red-700",\n        "border-red-800",\n        "border-red-900",\n        "border-orange-100",\n        "border-orange-200",\n        "border-orange-300",\n        "border-orange-400",\n        "border-orange-500",\n        "border-orange-600",\n        "border-orange-700",\n        "border-orange-800",\n        "border-orange-900",\n        "border-yellow-100",\n        "border-yellow-200",\n        "border-yellow-300",\n        "border-yellow-400",\n        "border-yellow-500",\n        "border-yellow-600",\n        "border-yellow-700",\n        "border-yellow-800",\n        "border-yellow-900",\n        "border-green-100",\n        "border-green-200",\n        "border-green-300",\n        "border-green-400",\n        "border-green-500",\n        "border-green-600",\n        "border-green-700",\n        "border-green-800",\n        "border-green-900",\n        "border-teal-100",\n        "border-teal-200",\n        "border-teal-300",\n        "border-teal-400",\n        "border-teal-500",\n        "border-teal-600",\n        "border-teal-700",\n        "border-teal-800",\n        "border-teal-900",\n        "border-blue-100",\n        "border-blue-200",\n        "border-blue-300",\n        "border-blue-400",\n        "border-blue-500",\n        "border-blue-600",\n        "border-blue-700",\n        "border-blue-800",\n        "border-blue-900",\n        "border-indigo-100",\n        "border-indigo-200",\n        "border-indigo-300",\n        "border-indigo-400",\n        "border-indigo-500",\n        "border-indigo-600",\n        "border-indigo-700",\n        "border-indigo-800",\n        "border-indigo-900",\n        "border-purple-100",\n        "border-purple-200",\n        "border-purple-300",\n        "border-purple-400",\n        "border-purple-500",\n        "border-purple-600",\n        "border-purple-700",\n        "border-purple-800",\n        "border-purple-900",\n        "border-pink-100",\n        "border-pink-200",\n        "border-pink-300",\n        "border-pink-400",\n        "border-pink-500",\n        "border-pink-600",\n        "border-pink-700",\n        "border-pink-800",\n        "border-pink-900",\n        "border-opacity-0",\n        "border-opacity-25",\n        "border-opacity-50",\n        "border-opacity-75",\n        "border-opacity-100",\n        "border-solid",\n        "border-dashed",\n        "border-dotted",\n        "border-double",\n        "border-none",\n        "divide-x-0",\n        "divide-x-2",\n        "divide-x-4",\n        "divide-x-8",\n        "divide-x",\n        "divide-y-0",\n        "divide-y-2",\n        "divide-y-4",\n        "divide-y-8",\n        "divide-y",\n        "divide-x-reverse",\n        "divide-y-reverse",\n        "divide-transparent",\n        "divide-current",\n        "divide-black",\n        "divide-white",\n        "divide-gray-100",\n        "divide-gray-200",\n        "divide-gray-300",\n        "divide-gray-400",\n        "divide-gray-500",\n        "divide-gray-600",\n        "divide-gray-700",\n        "divide-gray-800",\n        "divide-gray-900",\n        "divide-red-100",\n        "divide-red-200",\n        "divide-red-300",\n        "divide-red-400",\n        "divide-red-500",\n        "divide-red-600",\n        "divide-red-700",\n        "divide-red-800",\n        "divide-red-900",\n        "divide-orange-100",\n        "divide-orange-200",\n        "divide-orange-300",\n        "divide-orange-400",\n        "divide-orange-500",\n        "divide-orange-600",\n        "divide-orange-700",\n        "divide-orange-800",\n        "divide-orange-900",\n        "divide-yellow-100",\n        "divide-yellow-200",\n        "divide-yellow-300",\n        "divide-yellow-400",\n        "divide-yellow-500",\n        "divide-yellow-600",\n        "divide-yellow-700",\n        "divide-yellow-800",\n        "divide-yellow-900",\n        "divide-green-100",\n        "divide-green-200",\n        "divide-green-300",\n        "divide-green-400",\n        "divide-green-500",\n        "divide-green-600",\n        "divide-green-700",\n        "divide-green-800",\n        "divide-green-900",\n        "divide-teal-100",\n        "divide-teal-200",\n        "divide-teal-300",\n        "divide-teal-400",\n        "divide-teal-500",\n        "divide-teal-600",\n        "divide-teal-700",\n        "divide-teal-800",\n        "divide-teal-900",\n        "divide-blue-100",\n        "divide-blue-200",\n        "divide-blue-300",\n        "divide-blue-400",\n        "divide-blue-500",\n        "divide-blue-600",\n        "divide-blue-700",\n        "divide-blue-800",\n        "divide-blue-900",\n        "divide-indigo-100",\n        "divide-indigo-200",\n        "divide-indigo-300",\n        "divide-indigo-400",\n        "divide-indigo-500",\n        "divide-indigo-600",\n        "divide-indigo-700",\n        "divide-indigo-800",\n        "divide-indigo-900",\n        "divide-purple-100",\n        "divide-purple-200",\n        "divide-purple-300",\n        "divide-purple-400",\n        "divide-purple-500",\n        "divide-purple-600",\n        "divide-purple-700",\n        "divide-purple-800",\n        "divide-purple-900",\n        "divide-pink-100",\n        "divide-pink-200",\n        "divide-pink-300",\n        "divide-pink-400",\n        "divide-pink-500",\n        "divide-pink-600",\n        "divide-pink-700",\n        "divide-pink-800",\n        "divide-pink-900",\n        "rounded-none",\n        "rounded-sm",\n        "rounded",\n        "rounded-md",\n        "rounded-lg",\n        "rounded-full",\n        "rounded-t-none",\n        "rounded-t-sm",\n        "rounded-t",\n        "rounded-t-lg",\n        "rounded-t-full",\n        "rounded-b-none",\n        "rounded-b-sm",\n        "rounded-b",\n        "rounded-b-lg",\n        "rounded-b-full",\n        "rounded-l-none",\n        "rounded-l-sm",\n        "rounded-l",\n        "rounded-l-lg",\n        "rounded-l-full",\n        "rounded-r-none",\n        "rounded-r-sm",\n        "rounded-r",\n        "rounded-r-lg",\n        "rounded-r-full",\n        "rounded-tl-none",\n        "rounded-tl-sm",\n        "rounded-tl",\n        "rounded-tl-lg",\n        "rounded-tl-full",\n        "rounded-tr-none",\n        "rounded-tr-sm",\n        "rounded-tr",\n        "rounded-tr-lg",\n        "rounded-tr-full",\n        "rounded-bl-none",\n        "rounded-bl-sm",\n        "rounded-bl",\n        "rounded-bl-lg",\n        "rounded-bl-full",\n        "rounded-br-none",\n        "rounded-br-sm",\n        "rounded-br",\n        "rounded-br-lg",\n        "rounded-br-full",\n        "shadow-xs",\n        "shadow-sm",\n        "shadow",\n        "shadow-md",\n        "shadow-lg",\n        "shadow-xl",\n        "shadow-2xl",\n        "shadow-inner",\n        "shadow-outline",\n        "shadow-none",\n        "outline-none",\n        "opacity-0",\n        "opacity-25",\n        "opacity-50",\n        "opacity-75",\n        "opacity-100",\n        "table-auto",\n        "table-fixed",\n        "appearance-none",\n        "cursor-auto",\n        "cursor-default",\n        "cursor-pointer",\n        "cursor-wait",\n        "cursor-move",\n        "cursor-not-allowed",\n        "pointer-events-none",\n        "pointer-events-auto",\n        "resize-none",\n        "resize",\n        "resize-x",\n        "resize-y",\n        "select-none",\n        "select-text",\n        "select-all",\n        "select-auto",\n        "sr-only",\n        "not-sr-only",\n        "fill-current",\n        "stroke-current",\n        "stroke-0",\n        "stroke-1",\n        "stroke-2",\n        "clear-left"\n    ],\n    // ==================== CodeSnap ====================\n    "codesnap.containerPadding": "0em",\n    "codesnap.boxShadow": "rgba(0, 0, 0, 0.55) 0px 12px 24px",\n    "codesnap.backgroundColor": "#FFFF",\n    "codesnap.showLineNumbers": false,\n    "codesnap.roundedCorners": false,\n    "codesnap.transparentBackground": true,\n    // ==================== Live Server ====================\n    "liveServer.settings.donotShowInfoMsg": true,\n    // ==================== Code Runner ====================\n    "code-runner.runInTerminal": true,\n    "code-runner.clearPreviousOutput": true,\n    "code-runner.saveFileBeforeRun": true,\n    // ==================== Turbo Console Log ====================\n    "turboConsoleLog.addSemicolonInTheEnd": true,\n    "turboConsoleLog.insertEnclosingFunction": false,\n    "turboConsoleLog.includeFileNameAndLineNum": false,\n    "turboConsoleLog.logMessagePrefix": "🚀",\n    "turboConsoleLog.logMessageSuffix": "",\n    "turboConsoleLog.wrapLogMessage": false,\n    // ==================== Markdown ====================\n    "markdown.extension.print.theme": "dark",\n    // ==================== SonarLint ====================\n    "sonarlint.rules": {\n        "python:S1172": {\n            "level": "off"\n        },\n        "css:S4654": {\n            "level": "on"\n        },\n        "python:S1192": {\n            "level": "off"\n        }\n    },\n    // ==================== Total TypeScript ====================\n    "totalTypeScript.hideAllTips": true,\n    "totalTypeScript.hideBasicTips": true,\n    // ==================== React Snippets ====================\n    "reactSnippets.settings.prettierEnabled": true,\n    // ==================== vscode-prettier-eslint ====================\n    "vs-code-prettier-eslint.prettierLast": true,\n    // ==================== Rainbow Brackets ====================\n    "RainbowBrackets.depreciation-notice": false,\n    // ==================== Material Icon Theme ====================\n    "material-icon-theme.files.color": "#42a5f5",\n    "material-icon-theme.saturation": 0,\n    // ==================== GitHub Copilot / Chat / AI ====================\n    "github.copilot.enable": {\n        "*": false\n    },\n    "github.copilot.editor.enableCodeActions": false,\n    "github.copilot.nextEditSuggestions.enabled": false,\n    "github.copilot.nextEditSuggestions.fixes": false,\n    "github.copilot.renameSuggestions.triggerAutomatically": false,\n    "github.copilot.chat.codeGeneration.useInstructionFiles": false,\n    "github.copilot.chat.useResponsesApi": false,\n    "chat.editor.wordWrap": "on",\n    "chat.commandCenter.enabled": false,\n    "chat.tools.terminal.enableAutoApprove": false,\n    "chat.agent.codeBlockProgress": false,\n    "chat.agent.enabled": false,\n    "chat.disableAIFeatures": true,\n    "inlineChat.holdToSpeech": false,\n    "inlineChat.lineNaturalLanguageHint": false,\n    // ==================== Peacock ====================\n    "peacock.favoriteColors": [\n        {\n            "name": "Angular Red",\n            "value": "#dd0531"\n        },\n        {\n            "name": "Azure Blue",\n            "value": "#007fff"\n        },\n        {\n            "name": "JavaScript Yellow",\n            "value": "#f9e64f"\n        },\n        {\n            "name": "Mandalorian Blue",\n            "value": "#1857a4"\n        },\n        {\n            "name": "Node Green",\n            "value": "#215732"\n        },\n        {\n            "name": "React Blue",\n            "value": "#61dafb"\n        },\n        {\n            "name": "Something Different",\n            "value": "#832561"\n        },\n        {\n            "name": "Svelte Orange",\n            "value": "#ff3d00"\n        },\n        {\n            "name": "Vue Green",\n            "value": "#42b883"\n        },\n        {\n            "name": "Django",\n            "value": "#064B35"\n        }\n    ],\n    // ==================== Custom CSS/JS (Ubuntu paths) ====================\n    "vscode_custom_css.imports": [\n        "file:///${userHome}/.config/Code/User/custom-vscode.css",\n        "file:///${userHome}/.config/Code/User/vscode-script.js"\n    ],\n    // ==================== Token Color Customizations ====================\n    "editor.tokenColorCustomizations": {\n        "textMateRules": [\n            {\n                "scope": [\n                    "comment",\n                    "keyword",\n                    "variable.language",\n                    "entity.other.attribute-name.html",\n                    "entity.other.attribute-name",\n                    "keyword.control",\n                    "storage.type",\n                    "comment",\n                    "comment.block",\n                    "comment.line"\n                ],\n                "settings": {\n                    "fontStyle": ""\n                }\n            }\n        ]\n    },\n    "terminal.integrated.defaultProfile.linux": "zsh",\n    "workbench.editor.tabSizingFixedMaxWidth": 555,\n    "prettier.semi": false,\n    "js/ts.preferences.quoteStyle": "double",\n    "prettier.quoteProps": "consistent",\n    "prettier.singleQuote": false,\n    "screencastMode.fontSize": 30,\n    "screencastMode.verticalOffset": 0,\n    "screencastMode.keyboardOverlayTimeout": 2500,\n    "chat.tips.enabled": false,\n    "search.searchEditor.defaultNumberOfContextLines": 10,\n    "search.searchEditor.reusePriorSearchConfiguration": true,\n    "json.schemaDownload.trustedDomains": {\n        "https://schemastore.azurewebsites.net/": true,\n        "https://raw.githubusercontent.com/microsoft/vscode/": true,\n        "https://raw.githubusercontent.com/devcontainers/spec/": true,\n        "https://www.schemastore.org/": true,\n        "https://json.schemastore.org/": true,\n        "https://json-schema.org/": true,\n        "https://developer.microsoft.com/json-schemas/": true,\n        "https://biomejs.dev": true\n    }\n}\n',
+				"custom-vscode.css":
+					"/* Code comment style */\n.mtk3 {\n    font-family: 'Monaspace Radon', monospace !important;\n    font-style: italic !important;\n    color: #008c7d !important;\n}\n\n/* *:not() {\n    border: none !important;\n} */\n\n/* Code canvas top shadow */\n.monaco-editor .scroll-decoration {\n    box-shadow: 0px 0px 20px rgba(0, 0, 0, .75) !important;\n    top: -6px !important;\n}\n\n/* Match Text */\n.currentFindMatchInline {\n    background: #000 !important;\n}\n\n/* Side bar */\n.part.sidebar {\n    box-shadow: 0px 0px 50px rgba(0, 0, 0, .25);\n}\n\n/* .part.sidebar.right > div > div > div:nth-child(1) {\n    display: none !important;\n} */\n\n/* File Explorer Selected Item */\n.monaco-list.list_id_1 .monaco-list-row.selected {\n    background-color: #4f5971 !important;\n    opacity: 1 !important;\n    border-top: 1px #727b90 solid;\n    border-bottom: 1px #727b90 solid;\n}\n\n/* Hide the \">\" chevron icon */\n.codicon-tree-item-expanded:before {\n    display: none !important;\n}\n\n/* List item label name */\n.monaco-list.list_id_1 .monaco-list-row.selected .label-name {\n    color: #fff !important;\n    opacity: 1 !important;\n}\n\n/* File explorer action buttons */\n.monaco-workbench .part.sidebar .title-actions .actions-container {\n    display: none;\n}\n\n/* File Explorer Item Label */\n.monaco-tree .monaco-tree-row .label-name,\n.monaco-list .monaco-list-row .monaco-icon-label .label-name {\n    font-family: 'Geist Mono', monospace !important;\n    font-size: 14px !important;\n    font-weight: 400 !important;\n    color: #FFF !important;\n}\n\n.explorer-item-edited {\n    font-family: Geist Mono !important;\n    font-size: 14px !important;\n}\n\n/* .monaco-workbench .codicon[class*=codicon-] {\n    opacity: 0 !important;\n} */\n\n/* .explorer-folders-view .monaco-list-row {\n    padding-left: 20px !important;\n} */\n\n/* .monaco-list.list_id_1 .monaco-tl-indent > .indent-guide.active {\n    border: none !important;\n}\n\n.monaco-list.list_id_1 .monaco-tl-indent > .indent-guide.active:hover {\n    border: none !important;\n} */\n\n/* Sidebar top shadow */\n.monaco-scrollable-element>.shadow.top {\n    box-shadow: 0px 0px 10px rgba(0, 0, 0, .75) !important;\n    top: -3px !important;\n}\n\n/* Sidebar title */\n.composite.title {\n    display: flex !important;\n    flex-direction: row !important;\n    align-items: center !important;\n    justify-items: center !important;\n}\n\n.composite.title h2 {\n    font-weight: bold !important;\n    font-size: 12px !important;\n    text-transform: uppercase;\n    color: #bc9abc !important;\n}\n\n/* .composite.title h2::before {\n    display: inline-block;\n    margin-right: 6px;\n    font-size: 1.1rem;\n    content: '';\n} */\n\n/* Scroll Bar */\n.slider {\n    position: absolute !important;\n    right: 1px !important;\n    width: 1px !important;\n    background: #bc9abc !important;\n    left: auto !important;\n}\n\n/* Tooltip box style */\n.monaco-editor-hover,\n.monaco-hover {\n    box-shadow: 0px 8px 32px rgba(0, 0, 0, .45) !important;\n    /* padding: 10px !important; */\n    background-image: linear-gradient(#3c3c50 0%, #2a2b38 100%) !important;\n    backdrop-filter: blur(3px) !important;\n    border-radius: 16px !important;\n    border: none !important;\n    outline: 0px !important;\n}\n\n.monaco-resizable-hover {\n    border: none !important;\n}\n\n/* .monaco-hover > div, .monaco-editor-hover > div {\n    padding: 10px !important;\n    width: 600px !important;\n} */\n\n/* Project title's style at the top. */\n.monaco-workbench .part.titlebar>.titlebar-container>.titlebar-center>.window-title>.command-center .action-item.command-center-center {\n    border: none !important;\n    background: transparent !important;\n}\n\n/* Project Title */\n.titlebar-left {\n    justify-content: flex-end !important;\n    flex-grow: 0 !important;\n    width: 75px !important;\n    overflow: hidden;\n}\n\n/* Search Label */\n.search-label {\n    font-family: 'Geist Mono' !important;\n    font-size: 14px !important;\n    color: #fff;\n    display: block;\n}\n\n/* Search icon */\n.search-icon {\n    display: none !important;\n}\n\n.codicon-search::before {\n    display: none !important;\n}\n\n.codicon-arrow-right,\n.codicon-arrow-left {\n    display: none !important;\n}\n\n.titlebar-right {\n    width: auto !important;\n}\n\n.command-center-center {\n    width: auto !important;\n}\n\n/* Command Palette */\n.quick-input-widget {\n    transform: translateY(-50%) !important;\n    top: 50% !important;\n    box-shadow: 0px 8px 32px rgba(0, 0, 0, .35) !important;\n    /* border: 4px solid rgba(24, 135, 129, .35) !important; */\n    padding: 10px 10px 18px 10px !important;\n    background-image: linear-gradient(#3c3c50 0%, #2a2b38 100%) !important;\n    /* background: #3c3c50 !important; */\n    backdrop-filter: blur(3px) !important;\n    border-radius: 20px !important;\n    /* width: 50% !important; */\n}\n\n.quick-input-list,\n.quick-input-list .list_id_6 {\n    min-height: 400px !important;\n}\n\n/* .quick-input-widget::backdrop {\n    display: block;\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    background: rgba(0, 0, 0, .15);\n    top: 0;\n    left: 0;\n    backdrop-filter: blur(8px);\n} */\n\n/* Remove background for lists */\n.monaco-list-rows {\n    background: transparent !important;\n}\n\n/* Command palette text input */\n.quick-input-filter .monaco-inputbox {\n    border-radius: 12px !important;\n    padding: 16px !important;\n    border: none !important;\n    /* background-color: rgba(34, 34, 34, .40) !important; */\n    font-family: \"Geist Mono\" !important;\n    font-size: 16px !important;\n    margin-bottom: 16px !important;\n}\n\n#command-blur {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    background: rgba(0, 0, 0, .15);\n    top: 0;\n    left: 0;\n    backdrop-filter: blur(8px);\n}\n\n.watermark-container {\n    position: relative !important;\n    width: 100% !important;\n    height: 100% !important;\n}\n\n/* Command palette's input box placeholder. */\n.monaco-inputbox input::placeholder {\n    color: rgba(255, 255, 255, .3) !important;\n}\n\n/* Container that holds the VS Code home icon. */\n.editor-group-watermark {\n    max-width: none !important;\n}\n\n.monaco-workbench .part.editor>.content .editor-group-container>.editor-group-watermark .letterpress {\n    background-image: url(\"data:image/svg+xml,%3Csvg width='900' height='600' viewBox='0 0 900 600' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect y='450' width='150' height='149' fill='%235D6E7A' fill-opacity='0.05'/%3E%3Crect x='750' y='450' width='150' height='149' fill='%235D6E7A' fill-opacity='0.05'/%3E%3Crect x='150' y='150' width='150' height='150' fill='%235D6E7A' fill-opacity='0.3'/%3E%3Crect x='599' y='301' width='151' height='149' fill='%235D6E7A' fill-opacity='0.22'/%3E%3Crect x='450' y='450' width='149' height='150' fill='%235D6E7A' fill-opacity='0.05'/%3E%3Crect x='750' y='151' width='150' height='149' fill='%235D6E7A' fill-opacity='0.1'/%3E%3Crect x='300' width='150' height='150' fill='%235D6E7A' fill-opacity='0.1'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M363.85 205L379.167 383.204L447.897 403L516.819 383.181L532.15 205.003L363.85 205ZM500.201 247.291L499.242 258.37L498.819 263.281H498.753H448H447.928H418.194L420.119 285.663H447.925H448H491.224H496.903L496.389 291.534L491.437 349.079L491.121 352.768L448 365.164L447.902 365.197L404.744 352.768L401.794 318.448H411.541H422.942L424.442 335.884L447.905 342.454L447.925 342.448L471.426 335.866L473.871 307.521H448H447.928H400.849L395.673 247.291L395.17 241.423H447.928H448H500.707L500.201 247.291Z' fill='%235D6E7A'/%3E%3Cg clip-path='url(%23clip0_277_50)'%3E%3Cpath d='M207.416 203.589L217.282 223.322L206.702 226.848L201.39 205.598L207.416 203.589Z' fill='%235D6E7A'/%3E%3Cpath d='M228.109 236.031L222.922 225.658L235.551 221.448L240.211 228.77L228.109 236.031Z' fill='%235D6E7A'/%3E%3Cpath d='M239.736 215.837L237.249 216.666L235.178 213.41L237.483 212.834L239.736 215.837Z' fill='%235D6E7A'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M191 200C191 194.477 195.477 190 201 190H241C246.523 190 251 194.477 251 200V240C251 245.523 246.523 250 241 250H201C195.477 250 191 245.523 191 240V200ZM210.218 200.249C209.773 199.358 208.741 198.931 207.796 199.246L198.368 202.388C197.376 202.719 196.807 203.757 197.06 204.771L203.346 229.914C203.481 230.454 203.835 230.914 204.324 231.182C204.812 231.45 205.39 231.502 205.919 231.326L219.089 226.936L225.497 239.752C225.746 240.25 226.192 240.622 226.727 240.778C227.262 240.933 227.837 240.859 228.315 240.572L244.029 231.144C244.492 230.866 244.823 230.413 244.947 229.888C245.071 229.363 244.977 228.81 244.688 228.355L239.463 220.145L243.633 218.755C244.243 218.551 244.718 218.067 244.909 217.454C245.101 216.84 244.986 216.172 244.6 215.657L239.886 209.372C239.403 208.728 238.582 208.436 237.801 208.631L231.515 210.203C230.892 210.359 230.381 210.805 230.143 211.402C229.905 211.999 229.968 212.674 230.313 213.217L233.338 217.97L221.116 222.044L210.218 200.249Z' fill='%235D6E7A'/%3E%3C/g%3E%3Cpath d='M856.168 218.085L831.615 193.534C830.959 192.879 830.053 192.474 829.052 192.474C828.051 192.474 827.145 192.879 826.489 193.534L821.402 198.63L827.869 205.097C828.281 204.952 828.756 204.87 829.251 204.87C831.63 204.87 833.557 206.797 833.557 209.177C833.557 209.681 833.471 210.163 833.312 210.613L833.321 210.583L839.55 216.815C839.966 216.667 840.448 216.581 840.949 216.581C843.326 216.581 845.254 218.509 845.254 220.886C845.254 223.264 843.326 225.191 840.949 225.191C838.571 225.191 836.644 223.264 836.644 220.886C836.644 220.299 836.762 219.74 836.974 219.23L836.962 219.259L831.131 213.457V228.746C832.564 229.468 833.529 230.927 833.529 232.61C833.529 234.992 831.598 236.923 829.217 236.923C826.836 236.923 824.904 234.992 824.904 232.61C824.904 231.422 825.384 230.347 826.162 229.567C826.558 229.172 827.029 228.851 827.552 228.626L827.58 228.615V213.176C826.001 212.512 824.914 210.977 824.914 209.19C824.914 208.59 825.036 208.02 825.257 207.5L825.246 207.529L818.891 201.144L802.054 217.97C801.401 218.629 801 219.534 801 220.535C801 221.537 801.403 222.442 802.056 223.1L826.611 247.648C827.265 248.304 828.171 248.709 829.172 248.709C830.173 248.709 831.077 248.304 831.733 247.648L856.172 223.209C856.828 222.555 857.235 221.647 857.235 220.648C857.235 219.649 856.828 218.741 856.172 218.087L856.168 218.085Z' fill='%235D6E7A'/%3E%3Cpath d='M671.624 388.948C672.724 389.004 673.849 389.044 674.987 389.044C676.137 389.044 677.274 389.017 678.388 388.948C677.274 390.565 676.173 391.996 675.009 393.359L675.025 393.341C673.867 391.993 672.754 390.56 671.706 389.069L671.624 388.948ZM660.225 387.151C662.391 387.769 665.034 388.294 667.731 388.618L667.993 388.642C669.643 391.187 671.312 393.426 673.102 395.533L673.08 395.506C670.458 398.792 666.919 401.101 662.915 401.93L662.805 401.948C662.797 401.948 662.789 401.948 662.781 401.948C662.285 401.948 661.817 401.811 661.407 401.568L661.423 401.577C659.758 400.51 659.036 396.429 659.598 391.185C659.732 389.893 659.952 388.534 660.223 387.149L660.225 387.151ZM689.799 387.122C690.036 388.186 690.258 389.543 690.416 390.922L690.434 391.115C691.008 396.357 690.3 400.434 688.649 401.523C688.281 401.752 687.841 401.887 687.373 401.887C687.327 401.887 687.281 401.885 687.235 401.883H687.241C683.133 401.04 679.596 398.747 676.98 395.502L676.966 395.484C678.724 393.411 680.381 391.176 681.899 388.824L682.015 388.636C684.968 388.29 687.615 387.755 690.194 387.025L689.799 387.119V387.122ZM662.563 378.74C663.063 379.84 663.588 380.936 664.164 382.037C664.739 383.131 665.326 384.2 665.926 385.244C664.19 384.959 662.513 384.599 660.911 384.161C661.361 382.394 661.925 380.563 662.561 378.735L662.563 378.74ZM687.427 378.683C688.089 380.527 688.651 382.367 689.117 384.15C687.517 384.59 685.826 384.963 684.078 385.244C684.678 384.191 685.278 383.106 685.84 381.994C686.402 380.9 686.929 379.782 687.431 378.681L687.427 378.683ZM658.232 366.67C659.104 369.989 660.041 372.765 661.131 375.442L660.981 375.034C660.049 377.291 659.126 380.051 658.37 382.892L658.266 383.353C656.854 382.866 655.717 382.387 654.611 381.85L654.841 381.949C650.512 379.881 647.711 377.161 647.711 375.004C647.711 372.848 650.512 370.115 654.841 368.055C655.891 367.55 657.044 367.094 658.232 366.67ZM691.72 366.658C692.93 367.078 694.081 367.548 695.157 368.055C699.486 370.133 702.287 372.848 702.287 375.004C702.275 377.161 699.474 379.887 695.145 381.951C694.095 382.457 692.944 382.91 691.758 383.335C690.878 380.004 689.941 377.23 688.855 374.549L689.007 374.971C689.935 372.716 690.86 369.955 691.614 367.114L691.72 366.652V366.658ZM684.062 364.765C685.8 365.055 687.475 365.41 689.077 365.852C688.627 367.626 688.065 369.45 687.427 371.278C686.927 370.185 686.402 369.082 685.826 367.983C685.264 366.883 684.664 365.812 684.064 364.767L684.062 364.765ZM665.912 364.765C665.312 365.823 664.712 366.905 664.152 368.022C663.59 369.115 663.063 370.216 662.563 371.317C661.901 369.475 661.339 367.64 660.873 365.852C662.473 365.432 664.16 365.057 665.91 364.769L665.912 364.765ZM674.999 364.051C676.85 364.051 678.692 364.145 680.505 364.311C681.52 365.945 682.505 367.685 683.462 369.531C684.391 371.328 685.239 373.149 686.006 374.993C685.236 376.833 684.392 378.67 683.474 380.467C682.523 382.32 681.541 384.083 680.523 385.716C678.702 385.893 676.858 385.99 674.997 385.99C673.146 385.99 671.304 385.891 669.491 385.729C668.477 384.096 667.487 382.349 666.534 380.509C665.605 378.713 664.757 376.892 663.99 375.047C664.748 373.203 665.604 371.361 666.522 369.562C667.473 367.709 668.455 365.953 669.473 364.32C671.294 364.141 673.138 364.046 674.999 364.046V364.051ZM674.961 356.682C676.121 358.029 677.234 359.46 678.28 360.951L678.36 361.07C677.26 361.014 676.135 360.976 674.997 360.976C673.847 360.976 672.71 361.003 671.596 361.07C672.708 359.453 673.809 358.022 674.975 356.659L674.959 356.677L674.961 356.682ZM662.755 348.12C666.863 348.964 670.398 351.257 673.016 354.501L673.03 354.519C671.272 356.594 669.615 358.829 668.097 361.185L667.981 361.373C665.03 361.717 662.383 362.247 659.806 362.977L660.199 362.883C659.918 361.508 659.71 360.176 659.564 358.898C658.99 353.656 659.698 349.58 661.349 348.495C661.761 348.277 662.243 348.142 662.751 348.124H662.757L662.755 348.12ZM687.183 348.064V348.082C687.209 348.082 687.239 348.079 687.271 348.079C687.749 348.079 688.199 348.212 688.595 348.445L688.579 348.436C690.244 349.508 690.966 353.587 690.404 358.833C690.27 360.125 690.05 361.486 689.779 362.874C687.609 362.249 684.966 361.722 682.269 361.4L682.013 361.376C680.361 358.829 678.692 356.589 676.902 354.48L676.926 354.507C679.548 351.228 683.081 348.919 687.077 348.086L687.189 348.066L687.183 348.064ZM687.195 345.004C682.309 345.838 678.08 348.502 674.991 352.344L674.975 352.365C671.864 348.524 667.635 345.878 662.869 345.076L662.757 345.061C662.731 345.061 662.699 345.061 662.667 345.061C661.685 345.061 660.763 345.35 659.964 345.858L659.992 345.842C656.555 348.068 655.785 355.004 657.56 363.707C649.949 366.346 645 370.564 645 375.009C645 379.472 649.975 383.701 657.608 386.32C655.847 395.057 656.633 402.004 660.079 404.227C660.835 404.715 661.743 405 662.709 405C662.753 405 662.797 405 662.839 404.998H662.833C667.719 404.164 671.948 401.498 675.037 397.653L675.053 397.633C678.164 401.476 682.393 404.122 687.159 404.924L687.271 404.939C687.301 404.939 687.339 404.939 687.375 404.939C688.351 404.939 689.269 404.652 690.064 404.151L690.036 404.167C693.471 401.943 694.243 395.007 692.468 386.302C700.051 383.685 705 379.458 705 375.007C705 370.544 700.025 366.315 692.392 363.689C694.153 354.961 693.367 348.007 689.921 345.782C689.157 345.29 688.241 345 687.265 345C687.239 345 687.213 345 687.187 345H687.191L687.195 345.004ZM680.575 375.009C680.575 378.475 678.072 381.284 674.985 381.284C671.898 381.284 669.395 378.475 669.395 375.009C669.395 371.543 671.898 368.734 674.985 368.734C676.529 368.734 677.926 369.437 678.938 370.571C679.95 371.707 680.575 373.275 680.575 375.009Z' fill='%235D6E7A'/%3E%3Cg clip-path='url(%23clip1_277_50)'%3E%3Cpath d='M75.0024 357C67.0024 357 62.0024 361 60.0024 369C63.0024 365 66.5024 363.5 70.5024 364.5C72.7849 365.07 74.4149 366.725 76.2224 368.56C79.1649 371.545 82.5674 375 90.0024 375C98.0024 375 103.002 371 105.002 363C102.002 367 98.5024 368.5 94.5024 367.5C92.2199 366.93 90.5899 365.275 88.7824 363.44C85.8424 360.455 82.4399 357 75.0024 357ZM60.0024 375C52.0024 375 47.0024 379 45.0024 387C48.0024 383 51.5024 381.5 55.5024 382.5C57.7849 383.07 59.4149 384.725 61.2224 386.56C64.1649 389.545 67.5674 393 75.0024 393C83.0024 393 88.0024 389 90.0024 381C87.0024 385 83.5024 386.5 79.5024 385.5C77.2199 384.93 75.5899 383.275 73.7824 381.44C70.8424 378.455 67.4399 375 60.0024 375Z' fill='%235D6E7A'/%3E%3C/g%3E%3Cg clip-path='url(%23clip2_277_50)'%3E%3Cpath d='M520.035 497.016C519.906 497.028 519.496 497.069 519.126 497.098C510.604 497.866 502.622 502.464 497.566 509.53C494.751 513.459 492.95 517.916 492.27 522.637C492.029 524.285 492 524.772 492 527.006C492 529.24 492.029 529.727 492.27 531.375C493.9 542.64 501.918 552.105 512.792 555.612C514.739 556.239 516.792 556.667 519.126 556.925C520.035 557.025 523.965 557.025 524.874 556.925C528.903 556.48 532.317 555.483 535.683 553.764C536.199 553.501 536.299 553.43 536.229 553.372C536.182 553.336 533.982 550.387 531.343 546.821L526.545 540.341L520.534 531.445C517.226 526.554 514.504 522.555 514.481 522.555C514.457 522.549 514.434 526.502 514.422 531.328C514.405 539.778 514.399 540.118 514.293 540.318C514.141 540.605 514.023 540.722 513.777 540.851C513.589 540.945 513.425 540.963 512.54 540.963H511.525L511.255 540.793C511.079 540.681 510.95 540.535 510.862 540.365L510.739 540.101L510.751 528.343L510.768 516.579L510.95 516.351C511.044 516.227 511.243 516.069 511.384 515.993C511.625 515.876 511.718 515.864 512.733 515.864C513.93 515.864 514.129 515.911 514.44 516.251C514.528 516.345 517.783 521.247 521.677 527.152C525.572 533.058 530.897 541.121 533.513 545.079L538.264 552.275L538.504 552.117C540.633 550.733 542.886 548.762 544.669 546.71C548.463 542.353 550.909 537.04 551.73 531.375C551.971 529.727 552 529.24 552 527.006C552 524.772 551.971 524.285 551.73 522.637C550.1 511.372 542.082 501.907 531.208 498.4C529.29 497.778 527.249 497.35 524.962 497.092C524.399 497.034 520.522 496.969 520.035 497.016ZM532.317 515.16C532.598 515.301 532.827 515.571 532.909 515.852C532.956 516.005 532.968 519.265 532.956 526.613L532.938 537.157L531.079 534.307L529.214 531.457V523.792C529.214 518.837 529.238 516.051 529.273 515.917C529.367 515.588 529.572 515.33 529.853 515.178C530.094 515.055 530.182 515.043 531.103 515.043C531.971 515.043 532.123 515.055 532.317 515.16Z' fill='%235D6E7A'/%3E%3C/g%3E%3Cpath d='M247.614 497.059L242.623 551.119L220.999 556.941L199.375 551.119L194.385 497.059H247.614ZM237.557 508.051H220.98H204.109L204.916 514.579H220.98H221.882L220.98 514.955L205.503 521.401L206.016 527.782L220.98 527.831L229 527.856L228.487 536.365L220.98 538.478V538.471L220.918 538.488L213.669 536.658L213.229 531.377H213.205H206.48H206.457L207.337 541.573L220.98 545.608V545.6L221.005 545.608L234.575 541.646L236.335 521.401H220.98H220.942L220.98 521.384L236.898 514.579L237.557 508.051Z' fill='%235D6E7A'/%3E%3Cg clip-path='url(%23clip3_277_50)'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M690.984 95.2964C685.749 95.2964 682.365 92.8006 680.715 89.5366L685.305 86.8779C686.514 88.8519 688.083 90.3013 690.864 90.3013C693.198 90.3013 694.689 89.1335 694.689 87.5225C694.689 85.0985 691.455 84.1513 689.172 83.1733C685.104 81.4423 682.404 79.2673 682.404 74.6743C682.404 70.4473 685.626 67.2256 690.663 67.2256C694.245 67.2256 696.825 68.4734 698.676 71.7344L694.287 74.5542C693.321 72.8232 692.274 72.1387 690.663 72.1387C689.01 72.1387 687.963 73.1862 687.963 74.5542C687.963 76.2462 689.01 76.9305 691.428 77.9775C696.495 80.1495 700.329 81.8559 700.329 87.4419C700.329 92.5179 696.342 95.2964 690.984 95.2964ZM678 86.7974C678 92.6384 674.403 95.7256 669.408 95.7256C664.896 95.7256 662.193 94 660.864 91H660.819H660.798H660.786L665.373 87.7935C666.258 89.3625 667.056 90.4756 668.988 90.4756C670.842 90.4756 672 89.5367 672 86.7197V67H678V86.7974ZM645 100H705V40H645V100Z' fill='%235D6E7A'/%3E%3C/g%3E%3Cpath d='M101.299 68.3856C101.145 68.3744 100.967 68.3669 100.787 68.3669C99.8793 68.3669 99.0112 68.5356 98.2124 68.8431L98.2612 68.8262C98.0268 68.92 97.6518 68.92 97.6199 69.2181C97.7493 69.3419 97.768 69.5462 97.8768 69.7187C98.0962 70.09 98.3662 70.405 98.6812 70.6675L98.6868 70.6731C99.0149 70.93 99.343 71.1794 99.688 71.3987C100.297 71.7737 100.989 71.9969 101.586 72.3737C101.925 72.5931 102.272 72.8725 102.617 73.1069C102.787 73.2231 102.898 73.435 103.117 73.51V73.4631C103.011 73.3225 102.977 73.1181 102.872 72.9625C102.714 72.805 102.559 72.6644 102.403 72.5106C101.938 71.9012 101.4 71.38 100.796 70.945L100.774 70.93C100.273 70.5887 99.1762 70.1106 98.9699 69.535L98.9399 69.5012C99.3487 69.4431 99.7124 69.3569 100.063 69.2406L100.018 69.2537C100.551 69.1131 101.038 69.1431 101.587 69.0062C101.835 68.9425 102.086 68.8656 102.337 68.7869V68.6462C102.056 68.365 101.846 67.9825 101.556 67.72C100.789 67.045 99.943 66.4112 99.0524 65.8412L98.968 65.7906C98.4768 65.4775 97.8524 65.275 97.3349 65.0087C97.1474 64.915 96.8343 64.8681 96.7255 64.7106C96.4818 64.3637 96.2662 63.9662 96.0955 63.5462L96.0805 63.505C95.6205 62.6125 95.193 61.7044 94.798 60.7806C94.528 60.0625 94.2599 59.4737 93.958 58.9037L94.0012 58.9919C92.5274 56.5187 90.4743 54.5312 88.0237 53.1756L87.943 53.1344C87.3637 52.8475 86.6905 52.6244 85.9837 52.4987L85.9368 52.4912C85.5449 52.4725 85.1549 52.4444 84.7649 52.4275C84.4912 52.2512 84.2549 52.0712 84.0337 51.8725L84.0393 51.8781C83.1487 51.3156 80.8443 50.0969 80.188 51.7094C79.7662 52.7256 80.8143 53.7287 81.1762 54.2444C81.4649 54.5875 81.7274 54.9719 81.9543 55.3787L81.973 55.4162C82.0837 55.6881 82.1137 55.9675 82.2243 56.2506C82.4962 57.0981 82.7718 57.7937 83.0849 58.4669L83.0362 58.3506C83.2218 58.7237 83.4149 59.0406 83.6305 59.3406L83.6155 59.3181C83.7412 59.4887 83.9568 59.5694 84.0074 59.8506C83.8462 60.19 83.7205 60.5837 83.6512 60.9944L83.6474 61.0206C83.4449 61.6431 83.3268 62.3612 83.3268 63.1056C83.3268 64.27 83.6137 65.3669 84.1199 66.3306L84.1012 66.2931C84.3524 66.6812 84.9487 67.5437 85.7474 67.2137C86.4505 66.9325 86.2949 66.0419 86.4974 65.2581C86.5443 65.0706 86.5143 64.9469 86.6099 64.8194V64.855C86.8293 65.2956 87.0505 65.7156 87.2512 66.1562C87.8174 66.9719 88.4905 67.6656 89.2593 68.2375L89.2837 68.2544C89.6587 68.5356 89.9568 69.0231 90.4255 69.1956V69.1487H90.3899C90.283 69.0325 90.1649 68.9294 90.0355 68.8412L90.028 68.8375C89.7374 68.5525 89.4674 68.245 89.2237 67.9206L89.2087 67.9C88.5974 67.075 88.0162 66.1412 87.5118 65.1606L87.4574 65.0462C87.2005 64.555 86.9849 64.0244 86.7787 63.5387C86.6849 63.3512 86.6849 63.07 86.5274 62.9762C86.2499 63.2875 86.0005 63.6344 85.7924 64.0075L85.7774 64.0375C85.5374 64.7369 85.3799 65.545 85.3387 66.3831V66.4037C85.2749 66.4206 85.3068 66.4037 85.2749 66.4375C84.7743 66.3156 84.6018 65.7962 84.4143 65.3594C84.1593 64.6731 84.0112 63.8781 84.0112 63.0512C84.0112 62.3837 84.1068 61.7387 84.2868 61.1294L84.2755 61.1781C84.3862 60.85 84.8549 59.815 84.6674 59.5C84.5699 59.2019 84.2605 59.0312 84.088 58.7894C83.8837 58.5006 83.6962 58.1725 83.5405 57.8256L83.5255 57.7881C83.1505 56.9125 82.963 55.9412 82.5562 55.0656C82.3105 54.6081 82.0518 54.2144 81.7612 53.8469L81.7743 53.8637C81.4649 53.5056 81.1799 53.1062 80.9324 52.6825L80.9118 52.645C80.8349 52.4744 80.7243 52.1912 80.848 52.0037C80.8705 51.895 80.9568 51.8106 81.0674 51.7937C81.2737 51.625 81.8549 51.8444 82.0574 51.9381C82.6518 52.1631 83.1637 52.4275 83.638 52.7387L83.608 52.72C83.8274 52.8737 84.0655 53.1719 84.3468 53.2487H84.6749C85.1755 53.3594 85.7418 53.2825 86.2105 53.4194C87.0712 53.71 87.8155 54.0737 88.5037 54.52L88.4643 54.4956C90.5343 55.8325 92.1918 57.64 93.313 59.7756L93.3505 59.8525C93.538 60.2125 93.6205 60.5444 93.7912 60.9194C94.1193 61.6919 94.5243 62.4737 94.858 63.22C95.1749 64.0225 95.5499 64.7162 95.9962 65.3556L95.9737 65.3219C96.208 65.65 97.1493 65.8206 97.5712 65.9912C98.0155 66.1469 98.3718 66.295 98.7168 66.4619L98.6474 66.4319C99.1855 66.76 99.7105 67.135 100.217 67.495C100.474 67.6731 101.256 68.065 101.302 68.38L101.299 68.3856ZM79.3162 82.0975C79.3162 82.1256 79.318 82.1575 79.318 82.1894C79.318 83.2356 78.8512 84.1712 78.1124 84.8012L78.1068 84.805C77.2968 85.465 76.2524 85.8662 75.1143 85.8662C75.0262 85.8662 74.938 85.8644 74.8518 85.8587H74.863C73.4774 85.84 72.2024 85.39 71.158 84.6381L71.1768 84.6512L71.7318 83.5356C72.5362 83.9856 73.4924 84.265 74.5087 84.3044H74.5199C74.5705 84.3081 74.6287 84.31 74.6887 84.31C75.3112 84.31 75.8905 84.115 76.3649 83.7831L76.3555 83.7887C76.7849 83.4625 77.0587 82.9525 77.0587 82.3787C77.0587 82.3675 77.0587 82.3581 77.0587 82.3469V82.3487C77.0587 81.5762 76.5205 80.92 75.5399 80.3687C74.6305 79.87 72.8155 78.8294 72.8155 78.8294C71.9193 78.2744 71.3324 77.2975 71.3324 76.1837C71.3324 76.1444 71.3324 76.105 71.3343 76.0656V76.0712C71.3324 76.0356 71.3324 75.9944 71.3324 75.9531C71.3324 74.9875 71.758 74.1212 72.4312 73.5325L72.4349 73.5287C73.1512 72.9212 74.0868 72.5519 75.1087 72.5519C75.1743 72.5519 75.238 72.5537 75.3018 72.5556H75.2924C75.3093 72.5556 75.3299 72.5556 75.3505 72.5556C76.5487 72.5556 77.6643 72.9137 78.5943 73.5306L78.5718 73.5175L78.073 74.6331C77.3399 74.3031 76.4849 74.1044 75.5849 74.095H75.5812C75.5362 74.0912 75.4855 74.0894 75.433 74.0894C74.908 74.0894 74.4243 74.2731 74.0455 74.5806L74.0493 74.5769C73.6949 74.8712 73.4699 75.3119 73.468 75.805C73.468 76.5737 74.0155 77.2337 75.028 77.7962C75.9487 78.3006 77.8087 79.3656 77.8087 79.3656C78.7237 79.9037 79.3293 80.8825 79.3293 82.0037C79.3293 82.0375 79.3293 82.0731 79.3274 82.1069V82.1012L79.3162 82.0975ZM83.2012 83.0931C82.6893 82.0712 82.3912 80.8675 82.3912 79.5944C82.3912 79.3937 82.3987 79.195 82.4137 79L82.4118 79.0262C82.4118 75.7625 83.4037 74.13 85.3874 74.1287C85.4362 74.125 85.4943 74.1231 85.5543 74.1231C86.4449 74.1231 87.2268 74.5881 87.6712 75.2894L87.6768 75.2987C88.1849 76.315 88.483 77.515 88.483 78.7825C88.483 78.9775 88.4755 79.1706 88.4624 79.3619L88.4643 79.3356C88.4643 82.6256 87.4724 84.2719 85.4887 84.2744C85.438 84.2781 85.3799 84.28 85.3218 84.28C84.4312 84.28 83.6474 83.815 83.203 83.1137L83.1974 83.1044L83.2012 83.0931ZM90.9149 86.0031L88.5337 84.8312C88.7512 84.6494 88.9462 84.4581 89.1262 84.2519L89.1318 84.2462C90.0937 82.9487 90.6712 81.3156 90.6712 79.5494C90.6712 79.345 90.6637 79.1425 90.6487 78.9419L90.6505 78.9681C90.6505 74.6806 88.9674 72.5356 85.6012 72.5331C85.5262 72.5294 85.438 72.5275 85.3499 72.5275C83.9118 72.5275 82.6199 73.1594 81.7405 74.1625L81.7368 74.1681C80.7787 75.4656 80.203 77.0969 80.203 78.8631C80.203 79.0619 80.2105 79.2587 80.2255 79.4537L80.2237 79.4275C80.2068 79.6169 80.1974 79.8381 80.1974 80.0612C80.1974 81.7 80.7112 83.2187 81.5849 84.4656L81.568 84.4412C82.4099 85.3375 83.6043 85.8962 84.9262 85.8962C85.0499 85.8962 85.1718 85.8906 85.2918 85.8812L85.2749 85.8831C85.2918 85.8831 85.3143 85.8831 85.3349 85.8831C85.918 85.8831 86.4824 85.7987 87.0168 85.6431L86.9755 85.6544L90.0805 87.4637L90.9243 86.0069L90.9149 86.0031ZM98.6924 85.6862H92.5293V72.73H94.603V84.0944H98.6924V85.6862ZM69.8155 76.1275C69.2774 80.035 68.0455 83.5619 66.2437 86.7212L66.3187 86.5769C65.5968 87.9662 64.2318 88.9337 62.6287 89.0894L62.6099 89.0912C62.1243 89.065 61.6724 88.9487 61.2618 88.7594L61.2843 88.7687V87.6119C61.5412 87.6512 61.8374 87.6737 62.1393 87.6737C62.1562 87.6737 62.173 87.6737 62.1918 87.6737C62.2218 87.6756 62.2537 87.6756 62.2874 87.6756C62.8293 87.6756 63.3262 87.4787 63.7087 87.1506L63.7049 87.1525C64.1174 86.8131 64.3818 86.3069 64.3968 85.7369C64.2974 84.9156 64.108 84.1656 63.8362 83.4587L63.8587 83.5225L61.483 76.1275H63.6149L65.3193 81.6569C65.623 82.4369 65.7993 83.3406 65.7993 84.2837C65.7993 84.2856 65.7993 84.2875 65.7993 84.2875C66.703 81.9212 67.3893 79.1612 67.738 76.2981L67.7549 76.1256L69.8155 76.1275ZM60.403 85.6862H58.2318C58.1705 82.235 57.9599 78.7906 57.5999 75.3531H57.5812L54.2774 85.6862H52.6255L49.3443 75.3531H49.3218C49.0655 78.7919 48.913 82.2362 48.8643 85.6862H46.8843C47.013 81.08 47.333 76.7606 47.8443 72.7281H50.5387L53.6662 82.2512H53.6849L56.8405 72.7281H59.4055C59.973 77.4494 60.3074 81.7687 60.4087 85.6862H60.403ZM85.3218 54.7731C85.318 54.7731 85.3124 54.7731 85.3068 54.7731C85.0837 54.7731 84.868 54.8012 84.6618 54.8537L84.6805 54.85V54.88H84.7124C84.8737 55.12 85.0387 55.3281 85.2168 55.5231L85.213 55.5194C85.3387 55.7706 85.4474 56.02 85.573 56.2694L85.6049 56.2337C85.8093 56.0725 85.9387 55.825 85.9387 55.5475C85.9387 55.5137 85.9368 55.4819 85.933 55.4481V55.4519C85.8393 55.3412 85.8262 55.2325 85.7455 55.1237C85.6518 54.9662 85.4512 54.8894 85.3237 54.7656L85.3218 54.7731Z' fill='%235D6E7A'/%3E%3Cg clip-path='url(%23clip4_277_50)'%3E%3Cpath d='M379 54.0025C378.913 54.0025 378.81 54.0025 378.71 54.0025C374.685 54.0025 370.76 54.44 366.985 55.27L367.345 55.2025C363.74 55.96 360.55 57.08 357.57 58.56L357.805 58.455C355.278 59.6725 353.138 61.3025 351.38 63.28L351.362 63.3C349.935 64.86 349.045 66.9325 349 69.21V69.22C349.047 71.505 349.935 73.5725 351.365 75.1375L351.36 75.13C353.135 77.1275 355.275 78.7575 357.682 79.9225L357.802 79.975C360.547 81.3475 363.738 82.47 367.077 83.18L367.342 83.2275C370.757 83.99 374.683 84.4275 378.708 84.4275H379.015H379H379.29C383.315 84.4275 387.24 83.99 391.015 83.16L390.655 83.2275C394.26 82.47 397.45 81.35 400.43 79.87L400.195 79.975C402.722 78.7575 404.862 77.1275 406.62 75.15L406.638 75.13C408.065 73.57 408.955 71.4975 409 69.22V69.21C408.955 66.9225 408.065 64.85 406.632 63.2825L406.638 63.29C404.862 61.2925 402.722 59.6625 400.315 58.4975L400.195 58.445C397.45 57.0725 394.26 55.95 390.92 55.24L390.655 55.1925C387.24 54.43 383.315 53.9925 379.29 53.9925C379.188 53.9925 379.085 53.9925 378.983 53.9925H378.997L379 54.0025ZM371.2 72.1625C370.872 72.46 370.5 72.715 370.095 72.915L370.068 72.9275C369.715 73.0975 369.298 73.255 368.863 73.375L368.81 73.3875C368.38 73.5425 367.882 73.635 367.362 73.635C367.342 73.635 367.323 73.635 367.302 73.635H362.375L361.575 78.5425H357.957L361.157 61.855H368.09C368.135 61.855 368.19 61.8525 368.245 61.8525C369.145 61.8525 370.01 62.01 370.81 62.3L370.757 62.2825C371.495 62.5525 372.123 62.9725 372.628 63.505L372.63 63.5075C373.067 64.065 373.38 64.74 373.515 65.48L373.52 65.5075C373.582 65.8725 373.62 66.2925 373.62 66.7225C373.62 67.2125 373.573 67.69 373.483 68.155L373.49 68.1075C373.4 68.555 373.283 68.945 373.135 69.32L373.153 69.2725C373.009 69.6408 372.856 69.9883 372.693 70.315C372.489 70.6417 372.264 70.9692 372.017 71.2975C371.778 71.62 371.515 71.9025 371.225 72.155L371.218 72.16L371.2 72.1625ZM381.63 73.635L383.042 66.58C383.103 66.3125 383.138 66.0075 383.138 65.6925C383.138 65.6275 383.135 65.5625 383.132 65.4975V65.5075C383.13 65.235 383.025 64.9875 382.855 64.8C382.682 64.65 382.478 64.535 382.252 64.465L382.24 64.4625C381.927 64.3625 381.568 64.3075 381.195 64.3075C381.153 64.3075 381.11 64.3075 381.067 64.31H381.073H378.257L376.417 73.635H372.86L376.06 57.435H379.618L378.76 61.8525H381.96C382.015 61.8525 382.077 61.85 382.143 61.85C382.97 61.85 383.775 61.9525 384.545 62.1425L384.478 62.1275C385.1 62.265 385.642 62.5575 386.08 62.9575L386.077 62.955C386.468 63.2625 386.745 63.7 386.842 64.2L386.845 64.2125C386.88 64.435 386.9 64.69 386.9 64.95C386.9 65.375 386.847 65.7875 386.745 66.18L386.752 66.145L385.28 73.63L381.63 73.635ZM401.385 68.175C401.285 68.6275 401.18 68.995 401.055 69.3575L401.077 69.28C400.942 69.6775 400.777 70.0225 400.575 70.3425L400.588 70.3225C400.415 70.71 400.21 71.0425 399.967 71.3425L399.975 71.3325C399.73 71.6375 399.467 71.9075 399.182 72.155L399.175 72.1625C398.847 72.46 398.475 72.715 398.07 72.915L398.043 72.9275C397.69 73.0975 397.272 73.255 396.838 73.375L396.785 73.3875C396.355 73.5425 395.857 73.635 395.338 73.635C395.318 73.635 395.298 73.635 395.278 73.635H390.35L389.493 78.5325H385.935L389.135 61.845H396.007C396.062 61.8425 396.125 61.8425 396.19 61.8425C397.102 61.8425 397.98 62 398.792 62.2925L398.738 62.275C399.455 62.535 400.06 62.955 400.533 63.495L400.537 63.5C401.013 64.055 401.35 64.7425 401.482 65.4975L401.488 65.5225C401.543 65.85 401.575 66.225 401.575 66.61C401.575 67.1625 401.51 67.6975 401.388 68.2125L401.397 68.165L401.385 68.175ZM394.635 64.3075H392.19L390.908 71.18H393.048H393.177C393.802 71.18 394.418 71.1225 395.013 71.015L394.95 71.025C395.46 70.935 395.915 70.7525 396.315 70.495L396.3 70.5025C396.64 70.1975 396.925 69.845 397.148 69.45L397.158 69.43C397.415 68.96 397.608 68.4125 397.705 67.835L397.71 67.805C397.787 67.4825 397.83 67.11 397.83 66.7275C397.83 66.5425 397.82 66.36 397.8 66.1825L397.802 66.205C397.767 65.81 397.623 65.4525 397.4 65.1575L397.403 65.1625C397.112 64.8925 396.765 64.6825 396.38 64.555L396.36 64.55C395.895 64.395 395.362 64.3075 394.807 64.3075C394.75 64.3075 394.692 64.3075 394.637 64.31H394.645L394.635 64.3075ZM366.66 64.3075H364.215L362.927 71.18H365.073H365.202C365.827 71.18 366.443 71.1225 367.038 71.015L366.975 71.025C367.485 70.935 367.94 70.7525 368.34 70.495L368.325 70.5025C368.665 70.1975 368.95 69.845 369.173 69.45L369.182 69.43C369.44 68.96 369.632 68.4125 369.73 67.835L369.735 67.805C369.812 67.4825 369.855 67.11 369.855 66.7275C369.855 66.5425 369.845 66.36 369.825 66.1825L369.828 66.205C369.793 65.81 369.648 65.4525 369.425 65.1575L369.427 65.1625C369.137 64.8925 368.79 64.6825 368.405 64.555L368.385 64.55C367.92 64.395 367.387 64.3075 366.833 64.3075C366.775 64.3075 366.718 64.3075 366.663 64.31H366.67L366.66 64.3075Z' fill='%235D6E7A'/%3E%3C/g%3E%3Cg clip-path='url(%23clip5_277_50)'%3E%3Cpath d='M847.282 514.01L847.845 513.159L848.827 513.755L849.262 514.066C850.312 514.876 852.521 516.946 852.997 520.381C853.834 520.231 854.677 520.156 855.521 520.156C857.524 520.156 858.87 520.621 859.635 521.007L860.029 521.221L860.284 521.39L861 521.975L860.752 522.725C860.368 523.753 859.767 524.687 858.99 525.463C857.902 526.584 855.99 527.908 852.956 528.08L852.289 528.099H851.734C850.346 531.763 848.482 535.891 845.351 539.596C843.493 541.798 841.289 543.683 838.826 545.176C835.873 546.928 832.639 548.156 829.267 548.806C826.852 549.275 824.4 549.507 821.944 549.5C816.506 549.5 811.706 548.42 808.755 546.53C806.119 544.846 804.094 542.097 802.732 538.366C801.541 534.957 800.956 531.365 801.004 527.754C800.997 527.291 801.158 526.841 801.455 526.486C801.752 526.131 802.167 525.894 802.624 525.819L802.879 525.8H842.404L842.749 525.774L843.307 525.714C844.267 525.586 845.73 525.301 846.757 524.701C845.527 522.665 845.179 520.284 845.752 517.749C845.993 516.691 846.371 515.67 846.877 514.711L847.282 514.01ZM811.837 518.69L811.987 518.716C812.056 518.742 812.118 518.783 812.168 518.836C812.218 518.89 812.255 518.954 812.276 519.024L812.299 519.174V524.105L812.276 524.259C812.255 524.329 812.217 524.394 812.166 524.447C812.115 524.5 812.053 524.541 811.984 524.566L811.837 524.589H806.542C806.444 524.587 806.348 524.555 806.269 524.495C806.19 524.436 806.132 524.353 806.104 524.259L806.077 524.109V519.17L806.104 519.02C806.125 518.949 806.162 518.884 806.213 518.83C806.264 518.776 806.327 518.734 806.396 518.709L806.542 518.686L811.837 518.69ZM819.139 518.69L819.285 518.716C819.354 518.741 819.417 518.782 819.467 518.836C819.518 518.889 819.556 518.953 819.577 519.024L819.6 519.174V524.105L819.574 524.259C819.552 524.329 819.514 524.394 819.464 524.447C819.413 524.5 819.35 524.541 819.281 524.566L819.135 524.589H813.84C813.741 524.587 813.646 524.554 813.567 524.495C813.488 524.435 813.43 524.353 813.401 524.259L813.375 524.112V519.174C813.374 519.073 813.404 518.975 813.461 518.893C813.518 518.81 813.6 518.747 813.694 518.712L813.84 518.686L819.139 518.69ZM826.549 518.69L826.695 518.716C826.763 518.742 826.825 518.783 826.875 518.836C826.925 518.89 826.962 518.954 826.984 519.024L827.01 519.174V524.105L826.984 524.259C826.962 524.329 826.924 524.394 826.874 524.447C826.823 524.5 826.76 524.541 826.691 524.566L826.545 524.589H821.25C821.151 524.587 821.056 524.555 820.977 524.495C820.898 524.436 820.84 524.353 820.811 524.259L820.789 524.109V519.17L820.811 519.02C820.832 518.949 820.87 518.884 820.921 518.83C820.971 518.776 821.034 518.734 821.104 518.709L821.25 518.686L826.549 518.69ZM833.869 518.69L834.015 518.716C834.084 518.741 834.147 518.782 834.197 518.836C834.248 518.889 834.286 518.953 834.307 519.024L834.334 519.174V524.105C834.334 524.205 834.304 524.303 834.247 524.386C834.19 524.469 834.109 524.532 834.015 524.566L833.865 524.589H828.574C828.475 524.587 828.379 524.555 828.3 524.495C828.222 524.436 828.164 524.353 828.135 524.259L828.112 524.109V519.17L828.135 519.02C828.156 518.949 828.194 518.884 828.244 518.83C828.295 518.776 828.358 518.734 828.427 518.709L828.577 518.686H833.872L833.869 518.69ZM841.256 518.69L841.402 518.716C841.472 518.741 841.534 518.782 841.585 518.836C841.636 518.889 841.673 518.953 841.695 519.024L841.717 519.174V524.105C841.718 524.205 841.688 524.303 841.631 524.386C841.574 524.469 841.493 524.532 841.399 524.566L841.252 524.589H835.957C835.859 524.587 835.763 524.555 835.684 524.495C835.605 524.436 835.547 524.353 835.519 524.259L835.496 524.109V519.17L835.519 519.02C835.54 518.949 835.577 518.884 835.628 518.83C835.679 518.776 835.742 518.734 835.811 518.709L835.961 518.686H841.252L841.256 518.69ZM819.131 511.595L819.281 511.621C819.349 511.647 819.411 511.687 819.461 511.74C819.511 511.792 819.548 511.856 819.57 511.925L819.596 512.079V517.01C819.597 517.11 819.567 517.208 819.51 517.291C819.453 517.374 819.372 517.437 819.277 517.471L819.131 517.498H813.84C813.74 517.495 813.644 517.461 813.565 517.4C813.487 517.34 813.429 517.256 813.401 517.16L813.375 517.01V512.079C813.375 511.979 813.405 511.882 813.462 511.8C813.519 511.718 813.6 511.656 813.694 511.621L813.84 511.595H819.131ZM826.541 511.595L826.691 511.621C826.759 511.647 826.821 511.687 826.871 511.74C826.921 511.792 826.958 511.856 826.98 511.925L827.006 512.079V517.01C827.007 517.11 826.977 517.208 826.92 517.291C826.863 517.374 826.782 517.437 826.687 517.471L826.541 517.498H821.25C821.15 517.495 821.054 517.461 820.975 517.4C820.897 517.34 820.839 517.256 820.811 517.16L820.789 517.01V512.079L820.811 511.929C820.833 511.858 820.871 511.794 820.921 511.741C820.972 511.687 821.034 511.646 821.104 511.621L821.25 511.595H826.541ZM833.865 511.595C834.067 511.595 834.24 511.734 834.304 511.925L834.33 512.079V517.01C834.331 517.11 834.301 517.208 834.243 517.291C834.186 517.374 834.105 517.437 834.011 517.471L833.861 517.498H828.574C828.474 517.495 828.378 517.461 828.299 517.4C828.22 517.34 828.163 517.256 828.135 517.16L828.112 517.01V512.079L828.135 511.929C828.157 511.858 828.194 511.794 828.245 511.741C828.296 511.687 828.358 511.646 828.427 511.621L828.577 511.595H833.872H833.865ZM833.865 504.5C834.067 504.5 834.24 504.639 834.304 504.83L834.33 504.98V509.915C834.331 510.015 834.301 510.113 834.243 510.196C834.186 510.279 834.105 510.342 834.011 510.376L833.861 510.399H828.574C828.475 510.397 828.379 510.365 828.3 510.305C828.222 510.246 828.164 510.163 828.135 510.069L828.112 509.919V504.98L828.135 504.83C828.157 504.76 828.194 504.695 828.245 504.642C828.296 504.589 828.358 504.548 828.427 504.523L828.574 504.5H833.869H833.865Z' fill='%235D6E7A'/%3E%3C/g%3E%3Crect x='300.5' y='150.5' width='299' height='299' stroke='%235D6E7A'/%3E%3Cline y1='449.5' x2='900' y2='449.5' stroke='%235D6E7A'/%3E%3Cline y1='299.5' x2='300' y2='299.5' stroke='%235D6E7A'/%3E%3Cline x1='900' y1='300.5' x2='600' y2='300.5' stroke='%235D6E7A'/%3E%3Cline y1='150.5' x2='300' y2='150.5' stroke='%235D6E7A'/%3E%3Cline x1='900' y1='150.5' x2='600' y2='150.5' stroke='%235D6E7A'/%3E%3Cline x1='300.5' y1='2.18557e-08' x2='300.5' y2='150' stroke='%235D6E7A'/%3E%3Cline x1='150.5' y1='2.18557e-08' x2='150.5' y2='600' stroke='%235D6E7A'/%3E%3Cline x1='300.5' y1='450' x2='300.5' y2='600' stroke='%235D6E7A'/%3E%3Cline x1='450.5' y1='2.18557e-08' x2='450.5' y2='150' stroke='%235D6E7A'/%3E%3Cline x1='450.5' y1='450' x2='450.5' y2='600' stroke='%235D6E7A'/%3E%3Cline x1='599.5' y1='2.18557e-08' x2='599.5' y2='150' stroke='%235D6E7A'/%3E%3Cline x1='750.5' y1='2.18557e-08' x2='750.5' y2='150' stroke='%235D6E7A'/%3E%3Cline x1='750.5' y1='150' x2='750.5' y2='300' stroke='%235D6E7A'/%3E%3Cline x1='750.5' y1='300' x2='750.5' y2='600' stroke='%235D6E7A'/%3E%3Cline x1='599.5' y1='450' x2='599.5' y2='600' stroke='%235D6E7A'/%3E%3Cpath d='M221 361.879L214.497 350.616H205.189L221 378.001L236.811 350.616H227.503L221 361.879Z' fill='%235D6E7A'/%3E%3Cpath d='M238.977 350.616L221 381.751L203.024 350.616H192.845L221 399.384L249.156 350.616H238.977Z' fill='%235D6E7A'/%3E%3Cdefs%3E%3CclipPath id='clip0_277_50'%3E%3Crect width='60' height='60' fill='white' transform='translate(191 190)'/%3E%3C/clipPath%3E%3CclipPath id='clip1_277_50'%3E%3Crect width='60' height='60' fill='white' transform='translate(45 345)'/%3E%3C/clipPath%3E%3CclipPath id='clip2_277_50'%3E%3Crect width='60' height='60' fill='white' transform='translate(492 497)'/%3E%3C/clipPath%3E%3CclipPath id='clip3_277_50'%3E%3Crect width='60' height='60' fill='white' transform='translate(645 40)'/%3E%3C/clipPath%3E%3CclipPath id='clip4_277_50'%3E%3Crect width='60' height='60' fill='white' transform='translate(349 40)'/%3E%3C/clipPath%3E%3CclipPath id='clip5_277_50'%3E%3Crect width='60' height='60' fill='white' transform='translate(801 497)'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E%0A\") !important;\n    background-repeat: no-repeat no-repeat !important;\n    background-position: center center !important;\n    background-size: contain !important;\n    width: 90% !important;\n    min-width: 350px;\n    height: 70% !important;\n    max-width: none !important;\n    max-height: none !important;\n    aspect-ratio: auto !important;\n\n}\n",
+				"vscode-script.js":
+					"document.addEventListener('DOMContentLoaded', function () {\n    console.log(\"Custom JS loaded!\");\n\n    const checkElement = setInterval(() => {\n        const commandDialog = document.querySelector(\".quick-input-widget\");\n        if (commandDialog) {\n            // Apply the blur effect immediately if the command dialog is visible\n            if (commandDialog.style.display !== \"none\") {\n                runMyScript();\n            }\n            // Create an DOM observer to 'listen' for changes in element's attribute.\n            const observer = new MutationObserver((mutations) => {\n                mutations.forEach((mutation) => {\n                    if (mutation.type === 'attributes' && mutation.attributeName === 'style') {\n                        if (commandDialog.style.display === 'none') {\n                            handleEscape();\n                        } else {\n                            // If the .quick-input-widget element (command palette) is in the DOM\n                            // but no inline style display: none, show the backdrop blur.\n                            runMyScript();\n                        }\n                    }\n                });\n            });\n\n            observer.observe(commandDialog, { attributes: true });\n\n            // Clear the interval once the observer is set\n            clearInterval(checkElement);\n        } else {\n            console.log(\"Command dialog not found yet. Retrying...\");\n        }\n    }, 500); // Check every 500ms\n\n    // Execute when command palette was launched.\n    document.addEventListener('keydown', function (event) {\n        if ((event.metaKey || event.ctrlKey) && event.key === 'p') {\n            event.preventDefault();\n            runMyScript();\n        } else if (event.key === 'Escape' || event.key === 'Esc') {\n            event.preventDefault();\n            handleEscape();\n        }\n    });\n\n    // Ensure the escape key event listener is at the document level\n    document.addEventListener('keydown', function (event) {\n        if (event.key === 'Escape' || event.key === 'Esc') {\n            handleEscape();\n        }\n    }, true);\n\n    function runMyScript() {\n        const targetDiv = document.querySelector(\".monaco-workbench\");\n\n        // Remove existing element if it already exists\n        const existingElement = document.getElementById(\"command-blur\");\n        existingElement?.remove();\n\n        // Create and configure the new element\n        const newElement = document.createElement(\"div\");\n        newElement.setAttribute('id', 'command-blur');\n\n        newElement.addEventListener('click', function () {\n            newElement.remove();\n        });\n\n        // Append the new element as a child of the targetDiv\n        targetDiv.appendChild(newElement);\n\n        // Hide the sticky widget\n        const widgets = document.querySelectorAll(\".sticky-widget\");\n        widgets.forEach((widget) => {\n            widget.style.opacity = 0;\n        });\n\n        // Hide the tree sticky widget\n        const treeWidget = document.querySelector(\".monaco-tree-sticky-container\");\n        treeWidget && (treeWidget.style.opacity = 0);\n    }\n\n    // Remove the backdrop blur from the DOM when esc key is pressed.\n    function handleEscape() {\n        const element = document.getElementById(\"command-blur\");\n        element?.click();\n\n        // Show the sticky widget\n        const widgets = document.querySelectorAll(\".sticky-widget\");\n        widgets.forEach((widget) => {\n            widget.style.opacity = 1;\n        });\n\n        // Show the tree sticky widget\n        const treeWidget = document.querySelector(\".monaco-tree-sticky-container\");\n        treeWidget && (treeWidget.style.opacity = 1);\n    }\n});\n",
+				"keybindings.json":
+					'// Place these in your vs Code keybindings.json if you want to... or you can skip this these are terminal related only.\n// I use default vs code shorcuts mostly\n[\n    {\n        "key": "shift+`",\n        "command": "workbench.action.terminal.toggleTerminal",\n        "when": "!terminalFocus"\n    },\n    {\n        "key": "ctrl+`",\n        "command": "-workbench.action.terminal.toggleTerminal",\n        "when": "terminal.active"\n    },\n    {\n        "key": "shift+`",\n        "command": "workbench.action.togglePanel"\n    },\n    {\n        "key": "shift+1",\n        "command": "workbench.action.terminal.kill",\n        "when": "terminalFocus"\n    },\n    {\n        "key": "ctrl+l",\n        "command": "workbench.action.terminal.clear",\n        "when": "terminalHasBeenCreated || terminalProcessSupported"\n    },\n    {\n        "key": "shift+alt+down",\n        "command": "editor.action.copyLinesDownAction",\n        "when": "editorTextFocus && !editorReadonly"\n    },\n    {\n        "key": "shift+alt+up",\n        "command": "editor.action.copyLinesUpAction",\n        "when": "editorTextFocus && !editorReadonly"\n    },\n    {\n        "key": "shift+alt+up",\n        "command": "-editor.action.insertCursorAbove",\n        "when": "editorTextFocus"\n    },\n    {\n        "key": "shift+alt+down",\n        "command": "-editor.action.insertCursorBelow",\n        "when": "editorTextFocus"\n    },\n    {\n        "key": "ctrl+shift+g",\n        "command": "workbench.view.scm",\n        "when": "workbench.scm.active && !gitlens:disabled && config.gitlens.keymap == \'chorded\'"\n    },\n    {\n        "key": "ctrl+shift+g g",\n        "command": "-workbench.view.scm",\n        "when": "workbench.scm.active && !gitlens:disabled && config.gitlens.keymap == \'chorded\'"\n    },\n    {\n        "key": "ctrl+shift+g",\n        "command": "-workbench.action.terminal.openDetectedLink",\n        "when": "accessibleViewIsShown && terminalHasBeenCreated && accessibleViewCurrentProviderId == \'terminal\'"\n    },\n    {\n        "key": "ctrl+j",\n        "command": "-workbench.action.togglePanel"\n    }\n]\n',
+				"extensions.txt":
+					"adpyke.codesnap\nalmahdi.code-django\nbe5invis.vscode-custom-css\nbiomejs.biome\nbradlc.vscode-tailwindcss\nchakrounanas.turbo-console-log\ndskwrk.vscode-generate-getter-setter\ndsznajder.es7-react-js-snippets\nesbenp.prettier-vscode\nformulahendry.auto-close-tag\nformulahendry.auto-rename-tag\nformulahendry.code-runner\ngithub.github-vscode-theme\nheybourn.headwind\nhlrossato.vscode-drf\ninfeng.vscode-react-typescript\njohnpapa.vscode-peacock\njoy-yu.css-snippets\njunstyle.vscode-django-support\nmattpocock.ts-error-translator\nmikaelkristiansson87.react-theme-vscode\nms-python.autopep8\nms-python.black-formatter\nms-python.debugpy\nms-python.python\nms-python.vscode-pylance\nms-python.vscode-python-envs\nms-vscode.vscode-typescript-next\nnaumovs.color-highlight\npkief.material-icon-theme\nritwickdey.liveserver\nrodrigovallades.es7-react-js-snippets\nrvest.vs-code-prettier-eslint\nwscats.html-snippets\nxabikos.javascriptsnippets\nyzhang.markdown-all-in-one\n",
+				"cursor-extentions.txt":
+					"adpyke.codesnap\nanysphere.cursorpyright\nanysphere.remote-containers\nanysphere.remote-ssh\nbatisteo.vscode-django\nbiomejs.biome\nbradlc.vscode-tailwindcss\nchakrounanas.turbo-console-log\ndsznajder.es7-react-js-snippets\necmel.vscode-html-css\nesbenp.prettier-vscode\nformulahendry.auto-close-tag\ngithub.github-vscode-theme\njohnpapa.vscode-peacock\njumail.headwind\nmattpocock.ts-error-translator\nms-python.autopep8\nms-python.black-formatter\nms-python.debugpy\nms-python.python\nrobocorp.robotframework-lsp\ns-h-a-d-o-w.vscode-custom-css\ntypescriptteam.native-preview\n",
+			}
+
+			const FILE_META = {
+				"settings.json": { icon: "⚙️", lang: "jsonc", size: "55 KB" },
+				"keybindings.json": { icon: "⌨️", lang: "jsonc", size: "2 KB" },
+				"extensions.txt": { icon: "🧩", lang: "text", size: "1 KB" },
+				"cursor-extentions.txt": { icon: "🤖", lang: "text", size: "1 KB" },
+				"custom-vscode.css": { icon: "🎨", lang: "css", size: "41 KB" },
+				"vscode-script.js": { icon: "⚡", lang: "js", size: "4 KB" },
+			}
+
+			const EXT_INFO = {
+				"adpyke.codesnap": ["CodeSnap", "Beautiful code screenshots"],
+				"almahdi.code-django": ["Code Django", "Django code intelligence"],
+				"be5invis.vscode-custom-css": ["Custom CSS & JS", "Inject custom CSS/JS into VS Code"],
+				"biome.biome": ["Biome", "Fast formatter & linter (Rust-based)"],
+				"bradlc.vscode-tailwindcss": ["Tailwind IntelliSense", "Autocomplete for Tailwind CSS"],
+				"chakrounanas.turbo-console-log": ["Turbo Console Log", "Create meaningful console.log instantly"],
+				"dskwrk.vscode-generate-getter-setter": ["Getter/Setter", "Auto-generate getters & setters"],
+				"dsznajder.es7-react-js-snippets": ["ES7 React Snippets", "Modern React & Redux code snippets"],
+				"esbenp.prettier-vscode": ["Prettier", "The opinionated code formatter"],
+				"formulahendry.auto-close-tag": ["Auto Close Tag", "Automatically close HTML/XML tags"],
+				"formulahendry.auto-rename-tag": ["Auto Rename Tag", "Sync rename of matching HTML tags"],
+				"formulahendry.code-runner": ["Code Runner", "Run code snippets in 40+ languages"],
+				"github.github-vscode-theme": ["GitHub Theme", "GitHub's official dark & light themes"],
+				"heybourn.headwind": ["Headwind", "Opinionated Tailwind class sorter"],
+				"hlrossato.vscode-drf": ["DRF Extension", "Django REST Framework support"],
+				"infeng.vscode-react-typescript": ["React TypeScript", "TypeScript React intellisense"],
+				"johnpapa.vscode-peacock": ["Peacock", "Colour-code your workspaces"],
+				"joy-yu.css-snippets": ["CSS Snippets", "Quick CSS property snippets"],
+				"junstyle.vscode-django-support": ["Django Support", "Django template syntax support"],
+				"mattpocock.ts-error-translator": ["TS Error Translator", "Human-readable TypeScript errors"],
+				"mikaelkristiansson87.react-theme-vscode": ["React Theme", "Dark theme tuned for React"],
+				"ms-python.autopep8": ["autopep8", "PEP8 Python code formatter"],
+				"ms-python.black-formatter": ["Black", "The uncompromising Python formatter"],
+				"ms-python.debugpy": ["Python Debugger", "Full-featured Python debugging"],
+				"ms-python.python": ["Python", "Official Python language support"],
+				"ms-python.vscode-pylance": ["Pylance", "Fast, feature-rich Python language server"],
+				"ms-python.vscode-python-envs": ["Python Environments", "Manage virtualenvs & conda envs"],
+				"ms-vscode.vscode-typescript-next": ["TypeScript Nightly", "Latest TypeScript features & fixes"],
+				"naumovs.color-highlight": ["Color Highlight", "Inline colour preview in code"],
+				"pkief.material-icon-theme": ["Material Icons", "Beautiful file & folder icons"],
+				"ritwickdey.liveserver": ["Live Server", "Hot-reload development server"],
+				"rodrigovallades.es7-react-js-snippets": ["React Snippets (alt)", "Additional React/Redux snippets"],
+				"rvest.vs-code-prettier-eslint": ["Prettier ESLint", "Prettier + ESLint combined formatter"],
+				"wscats.html-snippets": ["HTML Snippets", "Full HTML5 tag & attribute snippets"],
+				"xabikos.javascriptsnippets": ["JS Snippets", "JavaScript ES6 code snippets"],
+				"yzhang.markdown-all-in-one": ["Markdown All-in-One", "Shortcuts, preview, TOC & more"],
+			}
+
+			// ── THREE.JS ──────────────────────────────────────────────────────────────
+			;(function () {
+				const canvas = document.getElementById("bg-canvas")
+				const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true })
+				renderer.setPixelRatio(Math.min(devicePixelRatio, 2))
+
+				const scene = new THREE.Scene()
+				const camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 0.1, 1000)
+				camera.position.z = 28
+
+				// PARTICLES
+				const N = 2000
+				const pos = new Float32Array(N * 3)
+				const col = new Float32Array(N * 3)
+				const palette = [
+					[0.31, 0.56, 0.97], // accent blue
+					[0.65, 0.55, 0.98], // purple
+					[0.2, 0.83, 0.6], // green
+					[0.96, 0.45, 0.71], // pink
+					[1, 1, 1], // white
+				]
+				for (let i = 0; i < N; i++) {
+					const r = 18 + Math.random() * 35
+					const th = Math.random() * Math.PI * 2
+					const ph = Math.acos(2 * Math.random() - 1)
+					pos[i * 3] = r * Math.sin(ph) * Math.cos(th)
+					pos[i * 3 + 1] = r * Math.sin(ph) * Math.sin(th)
+					pos[i * 3 + 2] = r * Math.cos(ph)
+					const c = palette[Math.floor(Math.random() * palette.length)]
+					col[i * 3] = c[0]
+					col[i * 3 + 1] = c[1]
+					col[i * 3 + 2] = c[2]
+				}
+				const geo = new THREE.BufferGeometry()
+				geo.setAttribute("position", new THREE.BufferAttribute(pos, 3))
+				geo.setAttribute("color", new THREE.BufferAttribute(col, 3))
+				const pts = new THREE.Points(geo, new THREE.PointsMaterial({ size: 0.15, vertexColors: true, transparent: true, opacity: 0.8 }))
+				scene.add(pts)
+
+				// WIREFRAMES
+				const addWire = (r, detail, color, opacity) => {
+					const m = new THREE.Mesh(new THREE.IcosahedronGeometry(r, detail), new THREE.MeshBasicMaterial({ color, wireframe: true, transparent: true, opacity }))
+					scene.add(m)
+					return m
+				}
+				const w1 = addWire(7, 1, 0x4f8ef7, 0.07)
+				const w2 = addWire(13, 1, 0xa78bfa, 0.04)
+				const w3 = addWire(19, 0, 0x34d399, 0.025)
+
+				let mx = 0,
+					my = 0
+				window.addEventListener("mousemove", (e) => {
+					mx = (e.clientX / innerWidth - 0.5) * 2
+					my = (e.clientY / innerHeight - 0.5) * 2
+				})
+
+				const resize = () => {
+					const h = document.getElementById("hero")
+					renderer.setSize(h.clientWidth, h.clientHeight)
+					camera.aspect = h.clientWidth / h.clientHeight
+					camera.updateProjectionMatrix()
+				}
+				resize()
+				window.addEventListener("resize", resize)
+
+				const clock = new THREE.Clock()
+				;(function frame() {
+					requestAnimationFrame(frame)
+					const t = clock.getElapsedTime()
+					pts.rotation.y = t * 0.035
+					pts.rotation.x = t * 0.018
+					w1.rotation.x = t * 0.09
+					w1.rotation.y = t * 0.13
+					w2.rotation.x = -t * 0.06
+					w2.rotation.z = t * 0.04
+					w3.rotation.y = t * 0.02
+					w3.rotation.z = -t * 0.03
+					camera.position.x += (mx * 2.5 - camera.position.x) * 0.04
+					camera.position.y += (-my * 2.5 - camera.position.y) * 0.04
+					camera.lookAt(scene.position)
+					renderer.render(scene, camera)
+				})()
+			})()
+
+			// ── NAV ───────────────────────────────────────────────────────────────────
+			window.addEventListener("scroll", () => {
+				document.getElementById("nav").classList.toggle("scrolled", scrollY > 50)
+			})
+
+			// ── PLATFORM TOGGLE ───────────────────────────────────────────────────────
+			let currentOS = "mac"
+			function setOS(os) {
+				currentOS = os
+				document.getElementById("os-mac").classList.toggle("active", os === "mac")
+				document.getElementById("os-win").classList.toggle("active", os === "win")
+				document.getElementById("os-hint").textContent = os === "mac" ? "All terminal commands shown for macOS/Linux" : "All terminal commands shown for Windows PowerShell"
+				// Show/hide all step bodies
+				;["s1", "s2", "s3", "s4"].forEach((id) => {
+					document.getElementById(id + "-mac").style.display = os === "mac" ? "" : "none"
+					document.getElementById(id + "-win").style.display = os === "win" ? "" : "none"
+					document.getElementById(id + "-label").textContent = os === "mac" ? "bash" : "powershell"
+				})
+			}
+
+			// ── COPY SHELL ────────────────────────────────────────────────────────────
+			function copyShell(btn, stepId) {
+				const el = document.getElementById(stepId + "-" + currentOS)
+				const text = el ? el.innerText.replace(/^\$ |^PS> /gm, "").trim() : ""
+				navigator.clipboard.writeText(text).then(() => {
+					btn.textContent = "✓ done"
+					btn.classList.add("ok")
+					setTimeout(() => {
+						btn.textContent = "copy"
+						btn.classList.remove("ok")
+					}, 2000)
+				})
+			}
+
+			// ── TOAST ─────────────────────────────────────────────────────────────────
+			function toast(msg) {
+				const el = document.getElementById("toast")
+				document.getElementById("toast-msg").textContent = msg
+				el.classList.add("on")
+				setTimeout(() => el.classList.remove("on"), 2200)
+			}
+
+			// ── SYNTAX HIGHLIGHT ──────────────────────────────────────────────────────
+			function hl(code, lang) {
+				const e = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+				let c = e(code)
+				if (lang === "jsonc") {
+					c = c
+						.replace(/(\/\/[^\n]*)/g, '<span class="t-comment">$1</span>')
+						.replace(/"([^"\\]*(\\.[^"\\]*)*)"(\s*:)/g, '<span class="t-prop">"$1"</span>$3')
+						.replace(/:\s*"([^"\\]*(\\.[^"\\]*)*)"/g, ': <span class="t-str">"$1"</span>')
+						.replace(/:\s*(-?\d+\.?\d*)/g, ': <span class="t-num">$1</span>')
+						.replace(/:\s*(true|false)\b/g, ': <span class="t-bool">$1</span>')
+						.replace(/:\s*(null)\b/g, ': <span class="t-null">$1</span>')
+						.replace(/([{}\[\],])/g, '<span class="t-punct">$1</span>')
+					return c
+				}
+				if (lang === "css") {
+					c = c
+						.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="t-comment">$1</span>')
+						.replace(/([.#:][a-zA-Z][a-zA-Z0-9_-]*(?:[.:#][a-zA-Z][a-zA-Z0-9_-]*)*)/g, '<span class="t-prop">$1</span>')
+						.replace(/\b(color|background|font|margin|padding|border|width|height|display|flex|grid|position|top|left|right|bottom|overflow|opacity|transform|transition|animation|box-shadow|border-radius|cursor|z-index|content|filter)\b/g, '<span class="t-key">$1</span>')
+						.replace(/:\s*([^;{}\/\n]+)/g, (m, v) => ': <span class="t-str">' + v + "</span>")
+					return c
+				}
+				if (lang === "js") {
+					c = c
+						.replace(/(\/\/[^\n]*)/g, '<span class="t-comment">$1</span>')
+						.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="t-comment">$1</span>')
+						.replace(/\b(const|let|var|function|return|if|else|else if|new|this|class|extends|import|export|default|async|await|for|of|in|while|do|try|catch|finally|typeof|instanceof)\b/g, '<span class="t-kw">$1</span>')
+						.replace(/\b(document|window|console|addEventListener|querySelector|querySelectorAll|getElementById|setTimeout|setInterval|clearInterval|forEach|map|filter|push|join|split|replace|trim)\b/g, '<span class="t-func">$1</span>')
+						.replace(/'([^']*)'/g, "<span class=\"t-str\">'$1'</span>")
+						.replace(/"([^"]*)"/g, '<span class="t-str">"$1"</span>')
+						.replace(/\b(\d+)\b/g, '<span class="t-num">$1</span>')
+					return c
+				}
+				return c
+			}
+
+			// ── FILE VIEWER ───────────────────────────────────────────────────────────
+			let activeFile = null
+
+			function fmtSize(str) {
+				const b = new Blob([str]).size
+				return b < 1024 ? b + " B" : (b / 1024).toFixed(1) + " KB"
+			}
+
+			function buildFileList() {
+				const list = document.getElementById("file-list")
+				Object.keys(FILES).forEach((name) => {
+					const meta = FILE_META[name] || { icon: "📄", size: "" }
+					const div = document.createElement("div")
+					div.className = "fitem"
+					div.dataset.file = name
+					div.innerHTML = `<span class="fitem-icon">${meta.icon}</span><span class="fitem-name">${name}</span><span class="fitem-size">${meta.size}</span>`
+					div.addEventListener("click", () => viewFile(name, div))
+					list.appendChild(div)
+				})
+			}
+
+			function viewFile(name, el) {
+				// Deselect old
+				document.querySelectorAll(".fitem").forEach((i) => i.classList.remove("on"))
+				if (el) el.classList.add("on")
+				activeFile = name
+
+				const content = FILES[name]
+				const meta = FILE_META[name] || { icon: "📄", lang: "text" }
+
+				document.getElementById("vw-icon").textContent = meta.icon
+				document.getElementById("vw-name").textContent = name
+
+				// Line-numbered highlighted HTML
+				const highlighted = hl(content, meta.lang || "text")
+				const hlines = highlighted.split("\n")
+				const numbered = hlines.map((ln, i) => `<span class="ln">${i + 1}</span>${ln}`).join("\n")
+				document.getElementById("vw-code").innerHTML = `<pre>${numbered}</pre>`
+
+				// Show controls
+				;["vw-expand", "vw-copy", "vw-dl"].forEach((id) => (document.getElementById(id).style.display = ""))
+
+				// Download link
+				const blob = new Blob([content], { type: "text/plain" })
+				const url = URL.createObjectURL(blob)
+				const dl = document.getElementById("vw-dl")
+				dl.href = url
+				dl.download = name
+
+				// Modal prep
+				document.getElementById("modal-fname").textContent = name
+				document.getElementById("modal-pre").innerHTML = hl(content, meta.lang || "text")
+				const mdl = document.getElementById("modal-dl")
+				mdl.href = url
+				mdl.download = name
+			}
+
+			function copyCurrentFile() {
+				if (!activeFile) return
+				navigator.clipboard.writeText(FILES[activeFile]).then(() => {
+					toast("Copied " + activeFile)
+					const btn = document.getElementById("vw-copy")
+					btn.classList.add("ok2")
+					btn.textContent = "✓ Copied"
+					setTimeout(() => {
+						btn.classList.remove("ok2")
+						btn.textContent = "⎘ Copy"
+					}, 2000)
+				})
+			}
+
+			function copyFileByName(name) {
+				if (FILES[name]) navigator.clipboard.writeText(FILES[name]).then(() => toast("Copied " + name))
+			}
+
+			function openModal() {
+				document.getElementById("modal").classList.add("on")
+				document.body.style.overflow = "hidden"
+			}
+			function closeModal() {
+				document.getElementById("modal").classList.remove("on")
+				document.body.style.overflow = ""
+			}
+			document.getElementById("modal").addEventListener("click", (e) => {
+				if (e.target === e.currentTarget) closeModal()
+			})
+			document.addEventListener("keydown", (e) => {
+				if (e.key === "Escape") closeModal()
+			})
+
+			// ── EXTENSIONS ────────────────────────────────────────────────────────────
+			function buildExtGrid() {
+				const grid = document.getElementById("ext-grid")
+				const lines = FILES["extensions.txt"].trim().split("\n")
+				lines.forEach((id) => {
+					id = id.trim()
+					if (!id) return
+					const [pub, extId] = id.split(".")
+					const info = EXT_INFO[id] || [extId || id, "VS Code extension"]
+					const card = document.createElement("a")
+					card.className = "ext-card"
+					card.href = `https://marketplace.visualstudio.com/items?itemName=${id}`
+					card.target = "_blank"
+					card.rel = "noopener"
+					card.dataset.name = (info[0] + " " + info[1] + " " + id).toLowerCase()
+					card.innerHTML = `
+      <div class="ext-top">
+        <div class="ext-name">${info[0]}</div>
+        <span class="ext-arrow">↗</span>
+      </div>
+      <div class="ext-id">${id}</div>
+      <div class="ext-desc2">${info[1]}</div>
+    `
+					grid.appendChild(card)
+				})
+			}
+
+			function filterExt(q) {
+				q = q.toLowerCase()
+				document.querySelectorAll(".ext-card").forEach((card) => {
+					card.style.display = !q || card.dataset.name.includes(q) ? "" : "none"
+				})
+			}
+
+			function copyExtCmd(os) {
+				const cmd = os === "mac" ? "cat extensions.txt | xargs -n 1 code --force --install-extension" : "Get-Content extensions.txt | ForEach-Object { code --force --install-extension $_ }"
+				navigator.clipboard.writeText(cmd).then(() => toast("Copied install command!"))
+			}
+
+			// ── CURSOR PILLS ──────────────────────────────────────────────────────────
+			function buildCursorPills() {
+				const wrap = document.getElementById("cursor-pills")
+				FILES["cursor-extentions.txt"]
+					.trim()
+					.split("\n")
+					.forEach((id) => {
+						id = id.trim()
+						if (!id) return
+						const a = document.createElement("a")
+						a.className = "cursor-pill"
+						a.href = `https://marketplace.visualstudio.com/items?itemName=${id}`
+						a.target = "_blank"
+						a.rel = "noopener"
+						a.textContent = id
+						wrap.appendChild(a)
+					})
+			}
+
+			// ── KEYBINDINGS ───────────────────────────────────────────────────────────
+			function buildKeybindings() {
+				const raw = FILES["keybindings.json"]
+				const stripped = raw.replace(/\/\/[^\n]*/g, "").replace(/\/\*[\s\S]*?\*\//g, "")
+				let bindings = []
+				try {
+					bindings = JSON.parse(stripped)
+				} catch (e) {}
+
+				const tbody = document.getElementById("kb-tbody")
+				bindings.forEach((b) => {
+					const tr = document.createElement("tr")
+					const keys = b.key
+						.split("+")
+						.map((k) => `<kbd>${k.trim()}</kbd>`)
+						.join(' <span style="color:var(--text3);font-size:0.7em">+</span> ')
+					const cmd = b.command || ""
+					const isRm = cmd.startsWith("-")
+					const clean = isRm ? cmd.slice(1) : cmd
+					const when = (b.when || "—").replace(/&&/g, ' <span style="color:var(--text3)">&&</span> ')
+					tr.innerHTML = `
+      <td>${keys}</td>
+      <td><span class="kb-cmd-text ${isRm ? "kb-rm" : "kb-add"}">${isRm ? '<span style="font-size:0.68rem;margin-right:0.3rem;opacity:0.6">REMOVE</span>' : ""}${clean}</span></td>
+      <td><span class="kb-when-text">${when}</span></td>
+    `
+					tbody.appendChild(tr)
+				})
+
+				document.getElementById("kb-raw-pre").innerHTML = hl(raw, "jsonc")
+			}
+
+			function switchKbView(view, btn) {
+				document.querySelectorAll(".kb-tab").forEach((t) => t.classList.remove("on"))
+				btn.classList.add("on")
+				const tw = document.getElementById("kb-table-wrap")
+				const rw = document.getElementById("kb-raw-wrap")
+				if (view === "table") {
+					tw.style.display = ""
+					rw.classList.remove("on")
+				} else {
+					tw.style.display = "none"
+					rw.classList.add("on")
+				}
+			}
+
+			// ── INIT ──────────────────────────────────────────────────────────────────
+			buildFileList()
+			buildExtGrid()
+			buildCursorPills()
+			buildKeybindings()
+
+			// Auto-select first file
+			const first = document.querySelector(".fitem")
+			if (first) {
+				first.click()
+			}
+		</script>
+	</body>
+</html>

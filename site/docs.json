@@ -1,0 +1,10 @@
+[
+  {"path":"README.md","name":"README.md"},
+  {"path":"settings.json","name":"settings.json"},
+  {"path":"keybindings.json","name":"keybindings.json"},
+  {"path":"extensions.txt","name":"extensions.txt"},
+  {"path":"custom-vscode.css","name":"custom-vscode.css"},
+  {"path":"custom-vscode-script.js","name":"custom-vscode-script.js"},
+  {"path":"cursor-extentions.txt","name":"cursor-extentions.txt"},
+  {"path":"CLAUDE.md","name":"CLAUDE.md"}
+]
